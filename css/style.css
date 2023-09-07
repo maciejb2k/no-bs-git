@@ -105,6 +105,7 @@ img {
   padding: 5px;
   border-radius: 3px;
   margin-bottom: 30px;
-  font-family: monospace;
+  font-family: 'Inconsolata', monospace;
+  font-size: 14px;
   color: #4c4c4c;
 }
