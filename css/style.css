@@ -29,7 +29,6 @@ a {
 
 .header {
   padding: 50px 0 50px;
-  margin-bottom: 50px;
   border-bottom: 1px solid #d9d9d9;
   display: flex;
   align-items: center;
@@ -143,6 +142,7 @@ a {
 }
 
 .nav {
+  margin-top: 50px;
   position: sticky;
   border-left: 1px solid #d9d9d9;
   padding-left: 50px;
@@ -281,10 +281,6 @@ a {
 .group {
   padding: 50px 0;
   border-bottom: 1px solid #d9d9d9;
-}
-
-.group:first-child {
-  padding-top: 0;
 }
 
 .text {
