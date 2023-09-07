@@ -47,11 +47,8 @@
           <h2 class="heading heading--h2">Boring preface</h2>
           <p class="text">
             <b>Git is hard for beginners</b>. Do you have similar feelings? I
-            think most of you can agree with that. Even though Git was created
-            in 2005, and since then there are tons of tutorials, articles, and
-            videos about it, Git is still hard to understand for most of the
-            beginners. Git was very hard for me. After months of struggling with
-            Git, I finally found out why.
+            think most of you can agree with that. Git was very hard for me, and
+            after months of struggling with Git, I finally found out why.
           </p>
           <p class="text">
             <b
@@ -61,10 +58,10 @@
             >
           </p>
           <p class="text">
-            Most of the tutorials and articles starts with showing these
-            abstract concepts, like the <b>commits</b>, which are some "colorful
-            dots", the <b>branches</b>, which are dots connected together, like
-            a metro stations on the map and so on.
+            Most of the tutorials and articles starts explaning Git with
+            abstract concepts, like the <b>commits</b> are some "colorful dots",
+            the <b>branches</b> are "dots connected together", like a metro
+            stations on the map and so on.
           </p>
           <p class="text">
             I think these guides are absolute garbage, because when you need to
@@ -72,14 +69,73 @@
             because you don't even know what it's all about.
           </p>
           <p class="text">
-            I want to show you that
-            <b>Git is not a blackbox, which somehow works</b>. You will have to
-            get your hands dirty with deep technical aspects of Git, but I
-            promise you that it will be worth it. Without further fuss, let's
-            get started.
+            <b>Git is not a blackbox, which somehow works</b>. I want this guide
+            to provide sufficient basics, so you don't have to suffer every time
+            something goes wrong in Git.
+          </p>
+        </div>
+        <div class="group">
+          <h2 class="heading heading--h2">Before we start</h2>
+          <p class="text">
+            <b>You have to learn how to use Git from the command line</b>. I
+            don't care about your colorful GUI for Git with paid pink Barbie
+            theme or some useless VSCode extensions. If you want to become a
+            pro, you have to use it from the command line. No excuses.
+          </p>
+        </div>
+        <div class="group">
+          <h2 class="heading heading--h2">SHA1</h2>
+          <p class="text">
+            Let's start! Everything in Git is based on <b>SHA1</b>.
+          </p>
+          <p class="text">
+            It is a
+            <a href="https://en.wikipedia.org/wiki/SHA-1" target="_blank"
+              >cryptographic hash function</a
+            >. You don't have to know how it mathematically works. Just
+            remember, that it takes any piece of text and turns it into
+            <b>unique 40-character string of letters and numbers</b>. It's
+            impossible to get back the original text from this unique string.
+          </p>
+
+          <div class="form">
+            <div class="form__group">
+              <label for="sha1-input" class="form__label">Input:</label>
+              <input class="form__input" id="sha1-input" type="text" />
+            </div>
+            <div class="form__group">
+              <label for="sha1-output" class="form__label">SHA1 Output:</label>
+              <input
+                class="form__input"
+                id="sha1-output"
+                type="text"
+                disabled
+              />
+            </div>
+          </div>
+
+          <p class="text">
+            If you are wondering, what if SHA1 will produce the same output for
+            two different inputs, you can read about
+            <a
+              href="https://en.wikipedia.org/wiki/Hash_collision"
+              target="_blank"
+              >collisions of hash functions</a
+            >.
+          </p>
+          <p class="text">
+            <b>Spoiler</b>: You will find that the probability of collision is
+            extremly low. Also, you will learn that SHA1 is not secure anymore,
+            but it doesn't matter, because it is not used for security in Git.
           </p>
         </div>
       </main>
+      <footer class="footer">
+        <p>© 2023 Maciej Biel</p>
+      </footer>
     </div>
+
+    <script src="//unpkg.com/alpinejs" async defer></script>
+    <script src="js/main.js"></script>
   </body>
 </html>
