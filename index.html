@@ -299,7 +299,8 @@ blob 12\0</code></pre>
               <pre><code class="code-block">blob 17\0what is up, doc?</code></pre>
               <p class="text text--label">
                 The <span class="code">git hash-object</span> command creates a
-                blob and calculates its SHA-1 hash (it doesn't persists it):
+                blob and calculates its SHA-1 hash (it doesn't persists it right
+                now):
               </p>
               <pre><code class="code-block">$ echo -n "what is up, doc?" | git hash-object --stdin
 bd9dbf5aae1a3862dd1526723246b20206e5fc37</code></pre>
@@ -326,7 +327,9 @@ bd9dbf5aae1a3862dd1526723246b20206e5fc37</code></pre>
                   />
                 </div>
                 <div class="form__group">
-                  <label for="blob-content" class="form__label">Blob:</label>
+                  <label for="blob-content" class="form__label"
+                    >Header + Content:</label
+                  >
                   <textarea
                     class="form__input"
                     name=""
