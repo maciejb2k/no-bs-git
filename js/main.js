@@ -143,12 +143,6 @@ document.addEventListener("DOMContentLoaded", function () {
   blob_input.addEventListener("input", function () {
     set_blob_content(blob_input.value);
     set_blob_compressed(get_blob_store(blob_input.value));
-
-    if (blob_input.value === "") {
-      blob_sha1.value = "";
-      return;
-    }
-
     set_blob_sha1(blob_input.value);
   });
 });

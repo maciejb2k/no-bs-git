@@ -355,11 +355,11 @@ bd9dbf5aae1a3862dd1526723246b20206e5fc37</code></pre>
               <h2 class="heading heading--h2">Compressing the Blob</h2>
               <p class="text">
                 As you may notice in the form above, there is an extra field
-                called <b>compression</b>.
+                called <b>compressed content</b>.
               </p>
               <p class="text">
-                Git is smart enough to compress the content of the blob before
-                it is stored in the
+                Git is smart enough to <b>compress</b> the content of the blob
+                before it is stored in the
                 <span class="code">.git/objects/</span> directory.
               </p>
               <p class="text text--label">
@@ -408,7 +408,7 @@ total 4
                 characters, se we will output hex bytes, the same way as in the
                 form above with the <span class="code">hexdump</span> command:
               </p>
-              <pre><code class="code-block">$ hexdump -e '16/1 "%02x"' .git/objects/bd/9dbf5aae1a3862dd1526723246b20206e5fc37
+              <pre><code class="code-block">$ hexdump -v -e '1/1 "%02x"' .git/objects/bd/9dbf5aae1a3862dd1526723246b20206e5fc37
 
 78014bcac94f5230346328cf482c51c82c56282dd05148c94fb607005f1c079d%</code></pre>
               <p class="text">
