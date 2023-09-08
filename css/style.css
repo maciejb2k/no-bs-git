@@ -20,6 +20,8 @@ a {
   color: #e84e31;
 }
 
+textarea { resize: vertical; min-width: 100%; display: block; }
+
 .container {
   max-width: 900px;
   margin: 0 auto;
@@ -288,6 +290,10 @@ a {
   line-height: 1.7;
 }
 
+.text--label {
+  margin-bottom: 10px;
+}
+
 .text:last-child {
   margin-bottom: 0;
 }
@@ -301,10 +307,10 @@ a {
 
 .code {
   background-color: #eaeaea;
-  padding: 5px;
+  padding: 4px 8px;
   border-radius: 3px;
   margin-bottom: 30px;
-  font-family: 'Inconsolata', monospace;
+  font-family: 'Fira Code', monospace;
   font-size: 14px;
   font-weight: 400;
   color: #000;
@@ -314,6 +320,10 @@ a {
   margin-bottom: 30px;
   display: flex;
   flex-direction: column;
+}
+
+.form:last-child {
+  margin-bottom: 0;
 }
 
 .form__label {
@@ -333,4 +343,28 @@ a {
 .footer {
   padding: 50px 0;
   text-align: center;
+}
+
+pre {
+  margin-bottom: 30px;
+}
+
+pre:last-child {
+  margin-bottom: 0;
+}
+
+.code-block {
+  font-family: 'Fira Code', monospace;
+  font-size: 14px;
+  display: block;
+  background: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+  min-width: 100px;
+  padding: 20px;
+  border-radius: 3px;
+  background: #eaeaea;
+  line-height: 1.7;
 }

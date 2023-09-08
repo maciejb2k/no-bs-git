@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Inconsolata&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Fira+Code&display=swap"
       rel="stylesheet"
     />
 
@@ -113,7 +113,7 @@
               </p>
               <p class="text">
                 Most of the tutorials and articles starts explaning Git with
-                abstract concepts, like the <b>commits</b> are some "colorful
+                some abstract concepts. The <b>commits</b> are some "colorful
                 dots", the <b>branches</b> are "dots connected together", like a
                 metro stations on the map and so on.
               </p>
@@ -132,24 +132,58 @@
             <div class="group">
               <h2 class="heading heading--h2">Before we start</h2>
               <p class="text">
-                <b>You have to learn how to use Git from the command line</b>. I
-                don't care about your colorful GUI for Git with paid pink Barbie
-                theme or some useless VSCode extensions. If you want to become a
-                pro, you have to use it from the command line. No excuses.
+                <a href="https://git-scm.com/downloads" target="_blank"
+                  >Install Git</a
+                >
+                and make sure it works by typing:
+                <span class="code">git --version</span>
               </p>
               <p class="text">
-                Before going further,
-                <a href="https://git-scm.com/downloads" target="_blank"
-                  >install Git</a
-                >
-                and make sure it works by typing:<br />
-                <span class="code">git --version</span>
+                <b>You have to learn how to use Git from the command line</b>. I
+                don't care about your paid GUI tools or some useless VSCode
+                extensions. If you want to understand it, you have to use it
+                from the command line.
               </p>
             </div>
 
             <div class="group">
-              <h2 class="heading heading--h2">SHA1</h2>
-              <p class="text">Everything in Git is based on <b>SHA1</b>.</p>
+              <h2 class="heading heading--h2">Creating a Git repository</h2>
+              <p class="text">
+                <span class="code">git init</span> creates a hidden
+                <span class="code">.git/</span>
+                directory in the current location.
+              </p>
+              <p class="text">
+                Git determines whether you are inside a Git repository by,
+                checking if there is a <span class="code">.git/</span> directory
+                at the root of the directory.
+              </p>
+              <p class="text text--label">
+                Take a look what is inside
+                <span class="code">.git/</span> directory:
+              </p>
+              <pre><code class="code-block">$ cd .git/ && ls -al
+
+total 32K
+-rw-r--r-- 1 gigachad gigachad   23 Sep  8 13:19 HEAD
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep  8 13:19 branches
+-rw-r--r-- 1 gigachad gigachad   92 Sep  8 13:19 config
+-rw-r--r-- 1 gigachad gigachad   73 Sep  8 13:19 description
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep  8 13:19 hooks
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep  8 13:19 info
+drwxr-xr-x 4 gigachad gigachad 4.0K Sep  8 13:19 objects
+drwxr-xr-x 4 gigachad gigachad 4.0K Sep  8 13:19 refs</code></pre>
+              <p class="text">
+                Familirize yourself with these files and directories and don't
+                do anything else for now. We will be focusing on the
+                <span class="code">objects/</span> and
+                <span class="code">refs/</span> directories in the next parts.
+              </p>
+            </div>
+
+            <div class="group">
+              <h2 class="heading heading--h2">SHA-1</h2>
+              <p class="text">Everything in Git is based on <b>SHA-1</b>.</p>
               <p class="text">
                 It is a
                 <a href="https://en.wikipedia.org/wiki/SHA-1" target="_blank"
@@ -160,7 +194,6 @@
                 impossible to get back the original text from this unique
                 string.
               </p>
-
               <div class="form">
                 <div class="form__group">
                   <label for="sha1-input" class="form__label">Input:</label>
@@ -173,7 +206,7 @@
                 </div>
                 <div class="form__group">
                   <label for="sha1-output" class="form__label"
-                    >SHA1 Output:</label
+                    >SHA-1 Output:</label
                   >
                   <input
                     class="form__input"
@@ -183,9 +216,8 @@
                   />
                 </div>
               </div>
-
               <p class="text">
-                If you are wondering, what if SHA1 will produce the same output
+                If you are wondering, what if SHA-1 will produce the same output
                 for two different inputs, you can read about
                 <a
                   href="https://en.wikipedia.org/wiki/Hash_collision"
@@ -195,18 +227,194 @@
               </p>
               <p class="text">
                 <b>Spoiler</b>: You will find that the probability of collision
-                is extremly low. Also, you will learn that SHA1 is not secure
+                is extremly low. Also, you will learn that SHA-1 is not secure
                 anymore, but it doesn't matter, because it is not used for
                 security in Git.
               </p>
             </div>
 
             <div class="group">
-              <h2 class="heading heading--h2">Creating a Git repository</h2>
+              <h2 class="heading heading--h2">The primary role of Git</h2>
               <p class="text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Voluptatem quae distinctio rem! Incidunt, culpa quibusdam sunt
-                possimus iste rerum laborum!
+                At the lowest conceptual level, Git is just a simple
+                <b>key:value</b> store.
+              </p>
+              <p class="text">
+                It calculates the SHA-1 hash of the given input, which may be a
+                text file, photo, pdf or anything else. Then it stores the input
+                under the name of the calculated SHA-1 hash. This explanation is
+                very simplified, but it is enough for now, just to understand
+                the core concept of Git.
+              </p>
+              <p class="text text--label">
+                You can try it by yourself with the following command:
+              </p>
+              <pre><code class="code-block">$ echo "hello world" | git hash-object --stdin
+3b18e512dba79e4c8300dd08aeb37f8e728b8dad</code></pre>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Types of objects in Git</h2>
+              <p class="text">
+                You may notice, that the output of the command above differs
+                from the one you got in the form above. To explain this
+                behaviours, we need to introduce new terms.
+              </p>
+              <p class="text">
+                Git has four types of objects:
+                <span class="code">blob</span>, <span class="code">tree</span>,
+                <span class="code">commit</span> and
+                <span class="code">tag</span>.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Blob</h2>
+              <p class="text">
+                Blob is a <b>generic piecie of content</b>. Blob is just a text
+                file, which is stored in the
+                <span class="code">.git/objects/</span> directory.
+              </p>
+              <p class="text text--label">Blob is structured as follows:</p>
+              <pre><code class="code-block">header + content</code></pre>
+              <p class="text text--label">
+                The <b>header</b> consists of the object type, which in our case
+                is a blob, a single whitespace, its size in bytes and a NULL
+                byte:
+              </p>
+              <pre><code class="code-block">&lt;object type&gt; &lt;size of content in bytes&gt;\0
+
+blob 12\0</code></pre>
+              <p class="text">
+                The <b>content</b> is the content (stdin, content of the file,
+                etc.), which we want to store.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Creating a Blob</h2>
+              <p class="text text--label">
+                For instance, we want to store the content of the file
+                <span class="code">hello.txt</span>:
+              </p>
+              <pre><code class="code-block">what is up, doc?</code></pre>
+              <p class="text text--label">The blob will look like this:</p>
+              <pre><code class="code-block">blob 17\0what is up, doc?</code></pre>
+              <p class="text text--label">
+                The <span class="code">git hash-object</span> command creates a
+                blob and calculates its SHA-1 hash (it doesn't persists it):
+              </p>
+              <pre><code class="code-block">$ echo -n "what is up, doc?" | git hash-object --stdin
+bd9dbf5aae1a3862dd1526723246b20206e5fc37</code></pre>
+              <p class="text">
+                Check out how the blob is created using the form below:
+              </p>
+              <div class="form">
+                <div class="form__group">
+                  <label for="blob-input" class="form__label">Content:</label>
+                  <input
+                    class="form__input"
+                    id="blob-input"
+                    type="text"
+                    value="what is up, doc?"
+                  />
+                </div>
+                <div class="form__group">
+                  <label for="blob-sha1" class="form__label">SHA-1:</label>
+                  <input
+                    class="form__input"
+                    id="blob-sha1"
+                    type="text"
+                    disabled
+                  />
+                </div>
+                <div class="form__group">
+                  <label for="blob-content" class="form__label">Blob:</label>
+                  <textarea
+                    class="form__input"
+                    name=""
+                    id="blob-content"
+                    cols="30"
+                    rows="5"
+                    disabled
+                  ></textarea>
+                </div>
+                <div class="form__group">
+                  <label for="blob-compressed" class="form__label"
+                    >Compressed content (HEX):</label
+                  >
+                  <textarea
+                    class="form__input"
+                    name=""
+                    id="blob-compressed"
+                    cols="30"
+                    rows="5"
+                    disabled
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Compressing the Blob</h2>
+              <p class="text">
+                As you may notice in the form above, there is an extra field
+                called <b>compression</b>.
+              </p>
+              <p class="text">
+                Git is smart enough to compress the content of the blob before
+                it is stored in the
+                <span class="code">.git/objects/</span> directory.
+              </p>
+              <p class="text text--label">
+                Git uses the
+                <a href="https://en.wikipedia.org/wiki/Deflate" target="_blank"
+                  >Deflate</a
+                >
+                data compression algorithm. Before saving the blob, Git
+                calculates the SHA-1 of the header + content, then compresses
+                it:
+              </p>
+              <pre><code class="code-block">Order of operations:
+1. header + content
+2. SHA-1 of header + content
+3. compress the header + content
+4. save the compressed header + content in .git/objects/ under the name of the SHA-1 hash</code></pre>
+              <p class="text text--label">
+                This time, with <span class="code">-w</span> flag, our blob will
+                be saved to the
+                <span class="code">.git/objects</span> directory:
+              </p>
+              <pre><code class="code-block">$ echo -n "what is up, doc?" | git hash-object --stdin -w
+bd9dbf5aae1a3862dd1526723246b20206e5fc37</code></pre>
+              <p class="text text--label">
+                Git groups the blobs in the directories by the
+                <b>first two characters</b> of the blob:
+              </p>
+              <pre><code class="code-block">$ ls -l .git/objects/
+
+total 12K
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep  8 22:24 bd
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep  8 13:19 info
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep  8 13:19 pack</code></pre>
+              <p class="text text--label">
+                Our blob starts with the <span class="code">bd</span> prefix, so
+                it is stored in the
+                <span class="code">.git/objects/bd</span> directory:
+              </p>
+              <pre><code class="code-block">$ ls -l .git/objects/bd
+
+total 4
+-r--r--r-- 1 gigachad gigachad 32 Sep  8 22:29 9dbf5aae1a3862dd1526723246b20206e5fc37</code></pre>
+              <p class="text text--label">
+                If you will try to view the content of the file with the
+                <span class="code">cat</span> command, you will get some random
+                characters, se we will output hex bytes, the same way as in the
+                form above with the <span class="code">hexdump</span> command:
+              </p>
+              <pre><code class="code-block">$ hexdump -e '16/1 "%02x"' .git/objects/bd/9dbf5aae1a3862dd1526723246b20206e5fc37
+
+78014bcac94f5230346328cf482c51c82c56282dd05148c94fb607005f1c079d%</code></pre>
+              <p class="text">
+                I strongly encourage you to verify the results. You can play
+                around with the form above to see in real time, how the
+                compression works.
               </p>
             </div>
           </main>
@@ -217,6 +425,7 @@
       </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>

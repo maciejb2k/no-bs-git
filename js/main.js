@@ -80,4 +80,75 @@ document.addEventListener("DOMContentLoaded", function () {
 
     sha1(sha1_input.value).then((hash) => (sha1_output.value = hash));
   });
+
+  // Git blob
+
+  async function git_blob(str) {
+    const header = `blob ${new Blob([str]).size}\0`;
+    const store = header + str;
+    return await sha1(store);
+  }
+
+  const zlib_deflate = (str) => {
+    const encoder = new TextEncoder();
+    const inputUint8Array = encoder.encode(str);
+    const compressedData = pako.deflate(inputUint8Array, { level: 1 });
+    return compressedData;
+  };
+
+  function bufferToHex(arrayBuffer) {
+    return Array.prototype.map
+      .call(new Uint8Array(arrayBuffer), (n) =>
+        ("00" + n.toString(16)).slice(-2)
+      )
+      .join("");
+  }
+
+  const zlib_inflate = (str) => {
+    try {
+      const decompressedUint8Array = pako.inflate(compressedData);
+      const decoder = new TextDecoder();
+      const originalString = decoder.decode(decompressedUint8Array);
+      return originalString;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const get_blob_header = (str) => `blob ${new Blob([str]).size}\\0`;
+  const get_blob_store = (str) => `blob ${new Blob([str]).size}\0${str}`;
+
+  const blob_input = document.getElementById("blob-input");
+  const blob_content = document.getElementById("blob-content");
+  const blob_compressed = document.getElementById("blob-compressed");
+  const blob_sha1 = document.getElementById("blob-sha1");
+
+  const set_blob_content = (str) => {
+    blob_content.value = get_blob_header(str) + str;
+  };
+
+  const set_blob_sha1 = (str) => {
+    git_blob(str).then((hash) => (blob_sha1.value = hash));
+  };
+
+  const set_blob_compressed = (str) => {
+    blob_compressed.value = bufferToHex(zlib_deflate(str));
+  };
+
+  // Initial values
+  set_blob_content(blob_input.value);
+  set_blob_sha1(blob_input.value);
+  set_blob_compressed(get_blob_store(blob_input.value));
+
+  blob_input.addEventListener("input", function () {
+    set_blob_content(blob_input.value);
+    set_blob_compressed(get_blob_store(blob_input.value));
+
+    if (blob_input.value === "") {
+      blob_sha1.value = "";
+      return;
+    }
+
+    set_blob_sha1(blob_input.value);
+  });
 });
