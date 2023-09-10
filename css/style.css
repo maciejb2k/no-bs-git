@@ -10,6 +10,7 @@ body {
 
 img {
   display: block;
+  max-width: 100%;
 }
 
 label {
@@ -21,6 +22,20 @@ a {
 }
 
 textarea { resize: vertical; min-width: 100%; display: block; }
+
+.image {
+  margin-bottom: 10px;
+}
+
+.image-caption {
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.image-caption:last-child {
+  margin-bottom: 0;
+}
 
 .list {
   list-style-position: inside;

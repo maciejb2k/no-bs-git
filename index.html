@@ -700,11 +700,16 @@ committer Maciej Biel &lt;example@email.com&gt; 1694329490 +0200</code></pre>
                 objects.
               </p>
               <p class="text">
-                The <span class="code">tree</span> is like a
+                The <span class="code">tree</span> is very similar to a
                 <b>UNIX directory</b>.
               </p>
               <p class="text">
-                All the content of the <span class="code">commit</span> (files
+                Combination of <span class="code">blobs</span> and
+                <span class="code">trees</span> is used to reflect the project
+                file structure within Git.
+              </p>
+              <p class="text">
+                All the content from the <span class="code">commit</span> (files
                 added to git during creation of commit) is stored using only
                 <span class="code">blobs</span> or
                 <span class="code">trees</span>.
@@ -713,11 +718,21 @@ committer Maciej Biel &lt;example@email.com&gt; 1694329490 +0200</code></pre>
                 Let's inspect the <span class="code">tree</span> header from the
                 <span class="code">5d8da6e51b</span> commit:
               </p>
-              <pre><code class="code-block">$ git cat-file -p 5d8da6e51b
+              <pre><code class="code-block"># Inspecting the commit
+
+$ git cat-file -p 5d8da6e51b
 
 ...
 tree 384a95a8d3539872c6eab82dedf3ad0cc2cf11c2
-...
+...</code></pre>
+
+              <pre><code class="code-block"># Inspecting the tree type
+
+$ git cat-file -t 384a95a8d3
+
+tree
+
+# Inspecting the tree
 
 $ git cat-file -p 384a95a8d3539
 
@@ -734,6 +749,16 @@ $ git cat-file -p 384a95a8d3539
               <p class="text">
                 The <span class="code">tree</span> object solves the problem
                 with <b>missing filename</b> during creation of the blob.
+              </p>
+              <p class="text text--label">
+                We can lookup the <span class="code">tree</span> object
+                corresponding to <span class="code">dir1</span> directory:
+              </p>
+              <pre><code class="code-block">$ git cat-file -p cc0fea78ece05c
+
+100644 blob 4988b5e6c604b490401d0a1be9f6f8025b60781c    file1.txt</code></pre>
+              <p class="text">
+                Blobs are always <b>leafs</b> in the tree structure.
               </p>
             </div>
             <div class="group">
@@ -764,6 +789,347 @@ $ git cat-file -p 384a95a8d3539
                   <span class="code">dir1</span> - name of the file / directory
                 </li>
               </ul>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Space efficiency in commits</h2>
+              <p class="text">
+                Take a look at the SHA-1 of the
+                <span class="code">file3.txt</span> in the tree from first
+                commit and from the second commit. <b>It didn't change</b>. The
+                same goes for the <span class="code">dir1</span>,
+                <span class="code">dir2</span> directories and blobs inside
+                them.
+              </p>
+              <pre><code class="code-block"># Second commit
+
+$ git cat-file -p 01d7ad59ab92e3efe2
+
+040000 tree cc0fea78ece05cc37dae4d302b4b3a0301595eb9    dir1
+040000 tree ef56f0a20f52ca47f13c8c5a72d6b7a3a22a3534    dir2
+100644 blob b037b2f50c795358d208ffb853999c7d14257773    file3.txt
+100644 blob 86825070f391e4be005bc2c73f91057cc7e94b28    file4.txt
+
+# First commit tree
+
+$ git cat-file -p 384a95a8d353987
+
+040000 tree cc0fea78ece05cc37dae4d302b4b3a0301595eb9    dir1
+040000 tree ef56f0a20f52ca47f13c8c5a72d6b7a3a22a3534    dir2
+100644 blob b037b2f50c795358d208ffb853999c7d14257773    file3.txt</code></pre>
+              <p class="text">
+                <b>Git saves space</b> by referencing in the next commits
+                objects, which SHA-1 didn't change.
+              </p>
+              <p class="text">
+                For instance, if the content of
+                <span class="code">file3.txt</span> will change, Git wil create
+                a new blob with a new SHA-1, and will reference it in the next
+                commit.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Commits uneveiled</h2>
+              <p class="text">
+                That's all about commits!
+                <b>No more magic behind the scenes</b>. You can always at any
+                time inspect any Git object in the repository. The only thing
+                you need is an SHA-1 of the object and that's it!
+              </p>
+              <p class="text text--label">
+                Let's summarize what we have learned to that point:
+              </p>
+              <ul class="list">
+                <li class="list__item">
+                  <span class="code">.git/objects</span> is a directory, which
+                  acts as a <b>database</b> for Git objects.
+                </li>
+                <li class="list__item">
+                  <span class="code">blobs</span>,
+                  <span class="code">trees</span> and
+                  <span class="code">commits</span> are <b>object types</b> in
+                  Git, which are stored in the
+                  <span class="code">.git/objects</span> directory.
+                </li>
+                <li class="list__item">
+                  <span class="code">commit</span> is a <b>snapshot</b> of your
+                  project, has a reference to the main
+                  <span class="code">tree</span> object, which contains whole
+                  <b>working directory structure</b>, and a reference to a
+                  <b>parent commit</b>.
+                </li>
+                <li class="list__item">
+                  <span class="code">tree</span> acts as a directory, contains
+                  other <b>trees and blobs</b> with their names.
+                </li>
+                <li class="list__item">
+                  <span class="code">blob</span> is a generic piece of content,
+                  used to store <b>any file</b> from the working directory.
+                </li>
+              </ul>
+              <img src="assets/git-object-model.png" alt="" class="image" />
+              <div class="image-caption">
+                Source:
+                <a
+                  href="http://shafiul.github.io/gitbook/1_the_git_object_model.html"
+                  target="_blank"
+                  >Git Community Book</a
+                >
+              </div>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Loose objects and compression</h2>
+              <p class="text">
+                Let's take a look at the
+                <span class="code">.git/objects</span> directory and inspect the
+                files after creating the commits in the previous section:
+              </p>
+              <pre><code class="code-block language-bash">ls -l .git/objects
+
+total 48
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 10:01 01
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 38
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 49
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 5d
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 10:01 6b
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 10:01 86
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 8c
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 b0
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 cc
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 ef
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 info
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 pack</code></pre>
+              <p class="text">
+                All single files in the first ten directories, except the
+                <span class="code">info</span> and
+                <span class="code">pack</span> directories, are called
+                <b>loose objects</b>.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Packfiles</h2>
+              <p class="text">
+                Every object with different SHA-1 in Git repository is stored as
+                a <b>separate object</b>.
+              </p>
+              <p class="text">
+                Let's assume, that we have a very long file which takes 100KB of
+                space on the disk. We commit it, make a change in only one
+                character in the file, so in the next commit, the SHA-1 will
+                change.
+              </p>
+              <p class="text">
+                Even though 99.9% of the file is the same as before, git must
+                create a copy of the 100KB file in the next commit. This sound
+                very space inefficient.
+              </p>
+              <p class="text">
+                Fortunately, Git has a solution for this problem. To save space,
+                git combines multiple objects into a single file called a
+                <b>packfile</b>.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Packing and unpacking objects</h2>
+              <p class="text">
+                Git has a built-in <b>garbarge collector</b>, which runs from
+                time to time (for instance on
+                <span class="code">git push</span>) and packs
+                <b>all the loose objects</b> into a <b>single packfiles</b>, so
+                we don't have to worry about doing it manually.
+              </p>
+              <p class="text">
+                For learning purposes, we will pack the objects manually. To do
+                that, we will use the <span class="code">git gc</span> command:
+              </p>
+              <pre><code class="code-block language-plain">$ ls -l .git/objects
+
+total 48
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 10:01 01
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 38
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 49
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 5d
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 10:01 6b
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 10:01 86
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 8c
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 b0
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 cc
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 ef
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 info
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 pack
+
+$ git gc
+
+Enumerating objects: 10, done.
+Counting objects: 100% (10/10), done.
+Delta compression using up to 6 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (10/10), done.
+Total 10 (delta 1), reused 0 (delta 0)
+
+$ ls -l .git/objects
+
+total 8
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 16:58 info
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 16:58 pack
+
+$ ls -l .git/objects/pack
+
+total 8
+-r--r--r-- 1 gigachad gigachad 1352 Sep 10 16:58 pack-8d7a7a9ff4d59f249dd1d0f5963ab59402e0e2ca.idx
+-r--r--r-- 1 gigachad gigachad  630 Sep 10 16:58 pack-8d7a7a9ff4d59f249dd1d0f5963ab59402e0e2ca.pack</code></pre>
+              <p class="text">
+                As you can see, Git packed all loose objects into
+                <b>single packfile</b> and <b>packfile index</b>.
+              </p>
+              <p class="text">
+                Usually, there <b>won't be any loose objects</b> in the
+                <span class="code">.git/objects</span> directory, because the
+                objects are stored in the packfiles.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Packfile and Packfile Index</h2>
+              <p class="text">
+                Thanks to packfiles, Git stores <b>original objects</b> once and
+                a differences between <b>new objects</b> and
+                <b>original ones</b> (deltas).
+              </p>
+              <p class="text">
+                The second benefit is <b>reducing amount of small files</b> on
+                the disk, so it's easier to manage them and send over the
+                network.
+              </p>
+              <p class="text">
+                <span class="code">pack-sha1.pack</span> stores packed objects
+                with computed deltas.
+              </p>
+              <p class="text">
+                <span class="code">pack-sha1.idx</span> stores informations, at
+                what length<br />
+                in the <span class="code">pack-sha1.pack</span> the compressed
+                object starts.
+              </p>
+              <p class="text">
+                In the example with one character change in 100KB file, with
+                packfiles, Git will store the <b>original file</b> once, and a
+                <b>difference</b> between the original file and the changed file
+                (this one character change).
+              </p>
+              <p class="text">
+                This approach saves space <b>very efficiently</b>.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">The three trees</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Working directory</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Staging Area / Index</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Repository</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Branches</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">HEAD</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Merging strategies</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Fast forward merge</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Three way merge</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Rebase</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Squash merge</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Configuring Git</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Reflog</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">.keep</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
             </div>
           </main>
           <footer class="footer">
