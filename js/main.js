@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Highlight.js
+  hljs.highlightAll();
+
   // Navigation
   const navs = document.querySelectorAll(".nav-list");
 

@@ -22,6 +22,22 @@ a {
 
 textarea { resize: vertical; min-width: 100%; display: block; }
 
+.list {
+  list-style-position: inside;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.list:last-child {
+  margin-bottom: 0;
+}
+
+.list__item {
+  line-height: 1.9;
+}
+
 .container {
   max-width: 900px;
   margin: 0 auto;
@@ -287,7 +303,7 @@ textarea { resize: vertical; min-width: 100%; display: block; }
 
 .text {
   margin-bottom: 30px;
-  line-height: 1.7;
+  line-height: 1.9;
 }
 
 .text--label {
@@ -367,4 +383,8 @@ pre:last-child {
   border-radius: 3px;
   background: #eaeaea;
   line-height: 1.7;
+}
+
+.language-plain {
+  display: block;
 }

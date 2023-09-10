@@ -14,6 +14,10 @@
       rel="stylesheet"
     />
 
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css"
+    />
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
@@ -161,7 +165,7 @@
                 Take a look what is inside
                 <span class="code">.git/</span> directory:
               </p>
-              <pre><code class="code-block">$ cd .git/ && ls -al
+              <pre><code class="code-block language-bash language-bash">$ cd .git/ && ls -al
 
 total 32K
 -rw-r--r-- 1 gigachad gigachad   23 Sep  8 13:19 HEAD
@@ -257,12 +261,12 @@ drwxr-xr-x 4 gigachad gigachad 4.0K Sep  8 13:19 refs</code></pre>
                 <span class="code">git hash-object</span> command:
               </p>
               <p class="text text--label">You can try it by yourself:</p>
-              <pre><code class="code-block">$ echo -n "can horses swim?" | git hash-object --stdin
+              <pre><code class="code-block language-bash">$ echo -n "can horses swim?" | git hash-object --stdin
 8579f63f0c021f84ebb2242b44bf985b12aeb14a</code></pre>
               <p class="text text--label">
                 Another example with the text file:
               </p>
-              <pre><code class="code-block">$ echo -n "can horses swim?" > file.txt
+              <pre><code class="code-block language-bash">$ echo -n "can horses swim?" > file.txt
 $ git hash-object file.txt
 8579f63f0c021f84ebb2242b44bf985b12aeb14a</code></pre>
               <p class="text">
@@ -299,13 +303,13 @@ $ git hash-object file.txt
                 <span class="code">.git/objects/</span> directory.
               </p>
               <p class="text text--label">Blob is structured as follows:</p>
-              <pre><code class="code-block">header + content</code></pre>
+              <pre><code class="code-block language-bash">header + content</code></pre>
               <p class="text text--label">
                 The <b>header</b> consists of the object type, which in our case
                 is a blob, a single whitespace, its content size in bytes and a
                 NULL byte:
               </p>
-              <pre><code class="code-block">&lt;object type&gt; &lt;size of content in bytes&gt;\0
+              <pre><code class="code-block language-bash">&lt;object type&gt; &lt;size of content in bytes&gt;\0
 
 # Example header
 blob 12\0</code></pre>
@@ -320,15 +324,17 @@ blob 12\0</code></pre>
                 For instance, we want to create a Blob from the previous
                 <span class="code">file.txt</span>:
               </p>
-              <pre><code class="code-block">can horses swim?</code></pre>
-              <p class="text text--label">The blob will look like this:</p>
-              <pre><code class="code-block">blob 17\0can horses swim?</code></pre>
+              <pre><code class="code-block language-bash">can horses swim?</code></pre>
+              <p class="text text--label">
+                The blob will look like this (header + content):
+              </p>
+              <pre><code class="code-block language-bash">blob 17\0can horses swim?</code></pre>
               <p class="text text--label">
                 The <span class="code">git hash-object -w</span> command with a
                 <span class="code">-w</span> flag creates and writes the blob to
                 the <span class="code">.git/objects</span> directory.
               </p>
-              <pre><code class="code-block">$ mkdir test-git-blobs
+              <pre><code class="code-block language-bash">$ mkdir test-git-blobs
 $ cd test-git-blobs
 $ git init
 $ echo -n "can horses swim?" > file.txt
@@ -412,8 +418,8 @@ $ git hash-object -w file.txt
               <p class="text">
                 When Git saves the blob, it calculates the SHA-1 of the
                 <b>raw blow</b>
-                (header + content), then <b>compresses the blob</b> and finally
-                saves it under the name of hash:
+                (header + content), then <b>compresses the blob</b> to a raw
+                bytes and finally saves them under the name of hash:
               </p>
             </div>
             <div class="group">
@@ -424,7 +430,7 @@ $ git hash-object -w file.txt
                 the <span class="code">4e</span> prefix, so it is stored in the
                 <span class="code">.git/objects/4e</span> directory:
               </p>
-              <pre><code class="code-block">$ ls -l .git/objects/
+              <pre><code class="code-block language-bash">$ ls -l .git/objects/
 
 total 12K
 drwxr-xr-x 2 gigachad gigachad 4.0K Sep  9 09:01 4e
@@ -441,7 +447,7 @@ total 4.0K
                 characters, se we will output hex bytes, the same way as in the
                 form above with the <span class="code">hexdump</span> command:
               </p>
-              <pre><code class="code-block">$ hexdump -v -e '1/1 "%02x"' 91d48941493c77aa18db2cf7661c1fcb4b6ee8
+              <pre><code class="code-block language-bash">$ hexdump -v -e '1/1 "%02x"' 91d48941493c77aa18db2cf7661c1fcb4b6ee8
 
 78014bcac94f52303463484ecc53c8c82f2a4e2d56282ecfccb5070061a2082c</code></pre>
               <p class="text">
@@ -469,7 +475,7 @@ total 4.0K
                 object, and the <span class="code">-t</span> flag prints the
                 type of the object:
               </p>
-              <pre><code class="code-block"># Full SHA-1 hash
+              <pre><code class="code-block language-bash"># Full SHA-1 hash
 
 $ git cat-file -p 4e91d48941493c77aa18db2cf7661c1fcb4b6ee8
 can horses swim?
@@ -478,10 +484,269 @@ blob
 
 # Short SHA-1 hash
 
-$ git cat-file -p 4e91
+$ git cat-file -p 4e91d489414
 can horses swim?
-$ git cat-file -t 4e91
+$ git cat-file -t 4e91d4
 blob</code></pre>
+              <p class="text">
+                Now you are familiar with the
+                <span class="code">blob</span> object.
+              </p>
+              <p class="text">
+                <b>Notice:</b> The <span class="code">blob</span> object
+                introduced new problem - we have lost the <b>filename</b>,
+                because the SHA-1 is only calculated from the content of the
+                file, the filename is ignored.
+              </p>
+              <p class="text">
+                You will understand the solution to this problem when we start
+                discussing <span class="code">tree</span> objects.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Commits</h2>
+              <p class="text">
+                <b>Commit</b> is a <b>snapshot</b> of your project at a given
+                time.
+              </p>
+              <p class="text">
+                <span class="code">commit</span> is second type of objects in
+                Git.
+              </p>
+              <p class="text">
+                Commits are stored in the
+                <span class="code">.git/objects</span> directory.
+              </p>
+              <p class="text">
+                To explain the <span class="code">commit</span> object, we need
+                to prepare some files and directories in our git repository.
+              </p>
+              <p class="text text-label">
+                Create a new directory and follow the instructions. Don't worry
+                if you don't know the commands, we will cover them later.
+              </p>
+              <pre><code class="code-block language-bash">$ mkdir git-commits
+$ cd git-commits
+$ git init
+$ mkdir dir1 dir2
+$ echo -n "new file 1" > dir1/file1.txt
+$ echo -n "new file 2" > dir2/file2.txt
+$ echo -n "new file 3" > file3.txt
+$ git add .
+$ git commit -m "Init commit"
+$ echo -n "new file 4" > file4.txt
+$ git add .
+$ git commit -m "Second commit"
+$ git log
+$ q
+</code></pre>
+              <p class="text text--label">What happened:</p>
+              <ul class="list">
+                <li class="list__item">
+                  the command <span class="code">git add .</span> marked the new
+                  files as ready to commit
+                </li>
+                <li class="list__item">
+                  the command
+                  <span class="code">git commit -m "Init commit"</span> saved
+                  them to the git repository with message "Init commit".
+                </li>
+                <li class="list__item">
+                  the command
+                  <span class="code">git log</span> displayed list of commits
+                </li>
+              </ul>
+              <p class="text text--label">
+                Take a look at the <span class="code">git log</span> output:
+              </p>
+              <pre><code class="code-block language-bash">$ git log
+
+commit 6bef83cf8560f8fc4994279afae86635cf1c394c (HEAD -> master)
+Author: Maciej Biel &lt;example@email.com&gt;
+Date:   Sun Sep 10 10:01:13 2023 +0200
+
+  Second commit
+
+commit 5d8da6e51bc54151677ba373cea0e13c9129eb6a (HEAD -> master)
+Author: Maciej Biel &lt;example@email.com&gt;
+Date:   Sun Sep 10 09:04:50 2023 +0200
+
+  Init commit</code></pre>
+              <p class="text">
+                Do you remember the
+                <span class="code">git cat-file</span> command from the previous
+                sections?
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Inspecting the commit</h2>
+              <p class="text">
+                With the <span class="code">git cat-file</span> command we can
+                inspect any object in the Git repository.
+              </p>
+              <p class="text text--label">
+                Copy the SHA-1 of the commits from the
+                <span class="code">git log</span> command and inspect the type
+                of these objects:
+              </p>
+              <pre><code class="code-block language-plain">$ git cat-file -t 6bef83cf85
+
+commit
+
+$ git cat-file -t 5d8da6e51b
+
+commit</code></pre>
+              <p class="text text--label">
+                Let's print the content of the commits:
+              </p>
+              <pre><code class="code-block language-plain">$ git cat-file -p 6bef83cf85
+
+tree 01d7ad59ab92e3efe29f4347fe0b996d7188f580
+parent 5d8da6e51bc54151677ba373cea0e13c9129eb6a
+author Maciej Biel &lt;example@email.com&gt; 1694332873 +0200
+committer Maciej Biel &lt;example@email.com&gt; 1694332873 +0200
+
+Second commit
+
+$ git cat-file -p 5d8da6e51b
+
+tree 384a95a8d3539872c6eab82dedf3ad0cc2cf11c2
+author Maciej Biel &lt;example@email.com&gt; 1694329490 +0200
+committer Maciej Biel &lt;example@email.com&gt; 1694329490 +0200
+
+Init commit</code></pre>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Structure of the commit</h2>
+              <p class="text">Commits are always structured in the same way:</p>
+              <ul class="list">
+                <li class="list__item">
+                  bunch of headers like: <span class="code">tree</span>,
+                  <span class="code">parent</span>,
+                  <span class="code">author</span>, etc.
+                </li>
+                <li class="list__item">newline <span class="code">\n</span></li>
+                <li class="list__item">commit message</li>
+              </ul>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Parents of the commit</h2>
+              <pre><code class="code-block language-plain">parent 5d8da6e51bc54151677ba373cea0e13c9129eb6a</code></pre>
+              <p class="text">
+                The commit may have zero or multiple
+                <span class="code">parent</span> headers.
+              </p>
+              <p class="text">
+                When the commit is <b>the first commit</b> in the Git
+                repository, it doesn't have a
+                <span class="code">parent</span> header (<span class="code"
+                  >5d8da6e51b</span
+                >
+                from previous section). It is the only commit in the repository
+                without a <span class="code">parent</span> header.
+              </p>
+              <p class="text">
+                Each next commit <b>must reference</b> it's previous commit
+                using a <span class="code">parent</span> header and SHA-1 of the
+                previous commit.
+              </p>
+              <p class="text">
+                When the commit has multiple parents, it means that it is a
+                <b>merge commit</b>, and it was created from multiple previous
+                commits. We will talk about merging strategies later.
+              </p>
+              <p class="text">
+                Commits are chained together using the
+                <span class="code">parent</span> header. That means, Git history
+                is not a <b>tree</b>, but a <b>DAG</b> (Directed Acyclic Graph).
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">
+                Author and commiter of the commit
+              </h2>
+              <pre><code class="code-block language-plain">author Maciej Biel &lt;example@email.com&gt; 1694329490 +0200
+committer Maciej Biel &lt;example@email.com&gt; 1694329490 +0200</code></pre>
+              <p class="text">
+                The <b>author</b> is the person who wrote the code changes,
+                while the <b>committer</b> is the one who added them to the
+                repository.
+              </p>
+              <p class="text">
+                For instance a <b>commiter</b> might be a GitHub when merging a
+                pull request.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Tree</h2>
+              <p class="text">
+                The <span class="code">tree</span> is a thrid type of Git
+                objects.
+              </p>
+              <p class="text">
+                The <span class="code">tree</span> is like a
+                <b>UNIX directory</b>.
+              </p>
+              <p class="text">
+                All the content of the <span class="code">commit</span> is
+                stored using: <span class="code">blobs</span> and
+                <span class="code">trees</span>.
+              </p>
+              <p class="text text--label">
+                Let's inspect the <span class="code">tree</span> header from the
+                <span class="code">5d8da6e51b</span> commit:
+              </p>
+              <pre><code class="code-block">$ git cat-file -p 5d8da6e51b
+
+...
+tree 384a95a8d3539872c6eab82dedf3ad0cc2cf11c2
+...
+
+$ git cat-file -p 384a95a8d3539
+
+040000 tree cc0fea78ece05cc37dae4d302b4b3a0301595eb9    dir1
+040000 tree ef56f0a20f52ca47f13c8c5a72d6b7a3a22a3534    dir2
+100644 blob b037b2f50c795358d208ffb853999c7d14257773    file3.txt</code></pre>
+              <p class="text">
+                During creation of the <span class="code">commit</span>, Git
+                creates a <span class="code">tree</span> object, which contains
+                all the files and directories, starting from the root directory
+                of the project, and writes them to the
+                <span class="code">.git/objects</span> directory.
+              </p>
+              <p class="text">
+                The <span class="code">tree</span> object solves the problem
+                with <b>missing filename</b> during creation of the blob.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Structure of the tree row</h2>
+              <pre><code class="code-block">040000 tree cc0fea78ece05cc37dae4d302b4b3a0301595eb9    dir1</code></pre>
+              <p class="text text--label">
+                Let's take a look at the first row. It consits of:
+              </p>
+              <ul class="list">
+                <li class="list__item">
+                  <span class="code">040000</span> - file mode
+                </li>
+                <li class="list__item">
+                  <span class="code">tree</span> - object type (<span
+                    class="code"
+                    >tree</span
+                  >
+                  or <span class="code">blob</span>)
+                </li>
+                <li class="list__item">
+                  <span class="code"
+                    >cc0fea78ece05cc37dae4d302b4b3a0301595eb9</span
+                  >
+                  - SHA-1 of the saved object in the
+                  <span class="code">.git/objects</span>
+                </li>
+                <li class="list__item">
+                  <span class="code">dir1</span> - name of the file / directory
+                </li>
+              </ul>
             </div>
           </main>
           <footer class="footer">
@@ -492,6 +757,7 @@ blob</code></pre>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>
