@@ -116,17 +116,6 @@
                 >
               </p>
               <p class="text">
-                Most of the tutorials and articles starts explaning Git with
-                some abstract concepts. The <b>commits</b> are some "colorful
-                dots", the <b>branches</b> are "dots connected together", like a
-                metro stations on the map and so on.
-              </p>
-              <p class="text">
-                I think these guides are absolute garbage, because when you need
-                to think about solving a real problem with Git, your mind goes
-                blank because you don't even know what it's all about.
-              </p>
-              <p class="text">
                 <b>Git is not a blackbox, which somehow works</b>. I want this
                 guide to provide sufficient basics, so you don't have to suffer
                 every time something goes wrong in Git.
@@ -165,7 +154,7 @@
                 Take a look what is inside
                 <span class="code">.git/</span> directory:
               </p>
-              <pre><code class="code-block language-bash language-bash">$ cd .git/ && ls -al
+              <pre><code class="code-block language-bash">$ cd .git/ && ls -al
 
 total 32K
 -rw-r--r-- 1 gigachad gigachad   23 Sep  8 13:19 HEAD
@@ -504,14 +493,40 @@ blob</code></pre>
               </p>
             </div>
             <div class="group">
+              <h2 class="heading heading--h2">Note on git objects</h2>
+              <p class="text">
+                Each Git object is structured, compressed and stored (<span
+                  class="code"
+                  >.git/objects</span
+                >) in the same way.
+              </p>
+              <p class="text text--label">
+                The only difference is in the
+                <b>object name</b> in the header and in the <b>content</b>:
+              </p>
+              <pre><code class="code-block language-plain"># Object stucture
+header + content
+
+# Blob
+blob &lt;content size in bytes&gt;\0&lt;content&gt;
+
+# Tree
+tree &lt;content size in bytes&gt;\0&lt;content&gt;
+
+# Commit
+commit &lt;content size in bytes&gt;\0&lt;content&gt;
+
+# Commit
+tag &lt;content size in bytes&gt;\0&lt;content&gt;</code></pre>
+            </div>
+            <div class="group">
               <h2 class="heading heading--h2">Commits</h2>
               <p class="text">
                 <b>Commit</b> is a <b>snapshot</b> of your project at a given
                 time.
               </p>
               <p class="text">
-                <span class="code">commit</span> is second type of objects in
-                Git.
+                <span class="code">commit</span> is a second object type in Git.
               </p>
               <p class="text">
                 Commits are stored in the
@@ -688,8 +703,9 @@ committer Maciej Biel &lt;example@email.com&gt; 1694329490 +0200</code></pre>
                 <b>UNIX directory</b>.
               </p>
               <p class="text">
-                All the content of the <span class="code">commit</span> is
-                stored using: <span class="code">blobs</span> and
+                All the content of the <span class="code">commit</span> (files
+                added to git during creation of commit) is stored using only
+                <span class="code">blobs</span> or
                 <span class="code">trees</span>.
               </p>
               <p class="text text--label">
