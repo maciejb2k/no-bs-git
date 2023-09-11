@@ -442,7 +442,8 @@ total 4.0K
 78014bcac94f52303463484ecc53c8c82f2a4e2d56282ecfccb5070061a2082c</code></pre>
               <p class="text">
                 Of course nobody views the blobs in the Git repository like
-                this, I want to demonstrate that the compression works.
+                this, I want to demonstrate that the compression works. You can
+                compare the results to the form above.
               </p>
             </div>
             <div class="group">
@@ -486,7 +487,8 @@ blob</code></pre>
                 <b>Notice:</b> The <span class="code">blob</span> object
                 introduced new problem - we have lost the <b>filename</b>,
                 because the SHA-1 is only calculated from the content of the
-                file, the filename is ignored.
+                file, the filenames is ignored and the SHA-1 hash becomes the
+                filename.
               </p>
               <p class="text">
                 You will understand the solution to this problem when we start
@@ -503,7 +505,7 @@ blob</code></pre>
               </p>
               <p class="text text--label">
                 The only difference is in the
-                <b>object name</b> in the header and in the <b>content</b>:
+                <b>object name</b> in the header, and in the <b>content</b>:
               </p>
               <pre><code class="code-block language-plain"># Object stucture
 header + content
@@ -517,7 +519,7 @@ tree &lt;content size in bytes&gt;\0&lt;content&gt;
 # Commit
 commit &lt;content size in bytes&gt;\0&lt;content&gt;
 
-# Commit
+# Tag
 tag &lt;content size in bytes&gt;\0&lt;content&gt;</code></pre>
             </div>
             <div class="group">
@@ -912,30 +914,40 @@ drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 pack</code></pre>
                 a <b>separate object</b>.
               </p>
               <p class="text">
-                Let's assume, that we have a very long file which takes 100KB of
-                space on the disk. We commit it, make a change in only one
-                character in the file, so in the next commit, the SHA-1 will
-                change.
+                <b
+                  >Dealing with lots of small files on disk is very
+                  inefficient.</b
+                >
+                Sending these files over the network too (have you ever pushed
+                <span class="code">node_modules/</span> to GitHub 😂)?
               </p>
               <p class="text">
-                Even though 99.9% of the file is the same as before, git must
-                create a copy of the 100KB file in the next commit. This sound
-                very space inefficient.
+                Let's assume, we have a very long file which takes up 100KB of
+                space on the disk. We commit it and then make a change in only
+                one character in the file, so in the next commit, the
+                <b>SHA-1 will change</b>.
+              </p>
+              <p class="text">
+                Even though <b>99.9% of the file is the same</b> as before, Git
+                must create a copy of the 100KB file in the next commit. This
+                sound very space inefficient.
               </p>
               <p class="text">
                 Fortunately, Git has a solution for this problem. To save space,
-                git combines multiple objects into a single file called a
+                Git combines multiple objects into a single file called a
                 <b>packfile</b>.
               </p>
             </div>
             <div class="group">
-              <h2 class="heading heading--h2">Packing and unpacking objects</h2>
+              <h2 class="heading heading--h2">Packing objects</h2>
               <p class="text">
-                Git has a built-in <b>garbarge collector</b>, which runs from
-                time to time (for instance on
+                Git has a built-in
+                <a href="https://git-scm.com/docs/git-gc" target="_blank"
+                  ><b>garbarge collector</b></a
+                >, which runs from time to time (for instance on
                 <span class="code">git push</span>) and packs
-                <b>all the loose objects</b> into a <b>single packfiles</b>, so
-                we don't have to worry about doing it manually.
+                <b>all the loose objects</b> into a <b>single packfiles</b>.
+                This happens automatically, and we don't have to worry about it.
               </p>
               <p class="text">
                 For learning purposes, we will pack the objects manually. To do
@@ -991,32 +1003,36 @@ total 8
               <h2 class="heading heading--h2">Packfile and Packfile Index</h2>
               <p class="text">
                 Thanks to packfiles, Git stores <b>original objects</b> once and
-                a differences between <b>new objects</b> and
-                <b>original ones</b> (deltas).
+                then stores only a differences between <b>new objects</b> and
+                <b>original ones</b> (deltas). Everything is compressed and
+                stored in well organized format.
               </p>
               <p class="text">
-                The second benefit is <b>reducing amount of small files</b> on
-                the disk, so it's easier to manage them and send over the
+                Another benefit is <b>reducing amount of small files</b> on the
+                disk, so it's easier to manage them and send them over the
                 network.
               </p>
               <p class="text">
-                <span class="code">pack-sha1.pack</span> stores packed objects
-                with computed deltas.
+                <span class="code">pack-[sha1].pack</span> stores
+                <b>packed objects</b> with <b>computed deltas</b>.
               </p>
               <p class="text">
-                <span class="code">pack-sha1.idx</span> stores informations, at
-                what length<br />
-                in the <span class="code">pack-sha1.pack</span> the compressed
-                object starts.
+                <span class="code">pack-[sha1].idx</span> provides an index into
+                <span class="code">pack-[sha1].pack</span>. It stores
+                <b>information about the objects</b> in the packfile, including
+                their SHA-1 hashes and the offset within the packfile where each
+                object's compressed data starts.
               </p>
               <p class="text">
-                In the example with one character change in 100KB file, with
-                packfiles, Git will store the <b>original file</b> once, and a
-                <b>difference</b> between the original file and the changed file
-                (this one character change).
+                In the example with one character change in 100KB file, Git
+                <b>won't duplicate the new blob</b>, but will store only that
+                one character difference compared to the original file.
               </p>
               <p class="text">
                 This approach saves space <b>very efficiently</b>.
+                <a href="https://git-scm.com/docs/pack-format" target="_blank"
+                  >You can read more about packfiles here.</a
+                >
               </p>
             </div>
             <div class="group">
