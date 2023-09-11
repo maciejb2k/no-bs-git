@@ -137,6 +137,12 @@
                 If you want to understand it, you have to use it from the
                 command line.
               </p>
+              <p class="text">
+                This guide assumes that
+                <b>you are familiar with the basics of Git</b>, but it's often
+                unclear to you how Git actually works, and how to deal with the
+                common Git problems.
+              </p>
             </div>
 
             <div class="group">
@@ -1037,26 +1043,338 @@ total 8
             </div>
             <div class="group">
               <h2 class="heading heading--h2">The three trees</h2>
-              <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
+              <p class="text text--label">
+                This term in Git describes, that there are three primary stages
+                that represent the status of files in your project:
+              </p>
+              <ul class="list">
+                <li class="list__item">Working Directory</li>
+                <li class="list__item">Staging Area / Index</li>
+                <li class="list__item">Local Repository / HEAD</li>
+              </ul>
+              <img
+                src="assets/three-trees.jpg"
+                alt="graphic showing flow between working directory, index and local repository"
+                class="image image--margin"
+              />
+
+              <p class="text text--label">
+                We will cover each of these stages briefly.
               </p>
             </div>
             <div class="group">
               <h2 class="heading heading--h2">Working directory</h2>
               <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
+                It's just a root directory, where
+                <b>files from your project are stored</b>, and where Git
+                repository is initialized. Nothing special.
+              </p>
+              <p class="text">
+                Working directory is like a <b>sandbox</b>, where you can freely
+                make changes, before you decide to save them to the Git
+                repository.
               </p>
             </div>
             <div class="group">
               <h2 class="heading heading--h2">Staging Area / Index</h2>
               <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
+                When you finish work on the files in the working directory, it
+                would be nice to have a place, where you can
+                <b>prepare the commit</b>, i.e. select files, which should be
+                included in the commit, review them and when everthing is ready,
+                save them to the repository.
+              </p>
+              <p class="text">
+                That's exactly what the <b>staging area</b> (also called
+                <b>index</b>) is for. It's a place between the working directory
+                and the local repository, where you can prepare and review files
+                for the commit. It's your <b>proposed next commit</b>.
+              </p>
+              <p class="text">
+                The command <span class="code">git add</span> is used to add
+                files to the staging area.
+              </p>
+              <p class="text">
+                How does <b>the staging area work</b>? Technically speaking,
+                it's not a separate place somewhere in the repository, but it is
+                a <b>binary file</b> called
+                <span class="code">.git/index</span>.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">How does the Index works?</h2>
+              <p class="text">
+                <span class="code">.git/index</span> is a binary file, which
+                stores sorted paths of files in the repository, their hashes,
+                versions and some other metadata.
+              </p>
+              <p class="text text--label">
+                We can view only <b>partial content</b> of the
+                <span class="code">.git/index</span> file with the
+                <span class="code">git ls-files --stage</span> command:
+              </p>
+              <pre><code class="code-block language-plain">git ls-files --stage
+
+100644 4988b5e6c604b490401d0a1be9f6f8025b60781c 0       dir1/file1.txt
+100644 8c7f7ff45b68b6e818f2d4bc3ae6f43332d3ecf7 0       dir2/file2.txt
+100644 b037b2f50c795358d208ffb853999c7d14257773 0       file3.txt
+100644 86825070f391e4be005bc2c73f91057cc7e94b28 0       file4.txt</code></pre>
+              <p class="text text--label">
+                What does the <span class="code">.git/index</span> do:
+              </p>
+              <ol class="list">
+                <li class="list__item">
+                  It stores the current snapshot of all files
+                  <b>added to the repository or to the index.</b>
+                </li>
+                <li class="list__item">
+                  When creating a commit, the
+                  <span class="code">tree</span> object, that will be included
+                  in the commit, is created <b>based on the contents</b> of the
+                  <span class="code">.git/index</span>.
+                </li>
+                <li class="list__item">
+                  It allows for <b>quick comparison of changes</b> between the
+                  working directory and what is in the index.
+                </li>
+                <li class="list__item">
+                  It stores information <b>about conflicts</b> if they occur.
+                </li>
+              </ol>
+              <p class="text text--label">
+                <a
+                  href="https://github.com/git/git/blob/867b1c1bf68363bcfd17667d6d4b9031fa6a1300/Documentation/technical/index-format.txt#L38"
+                  target="_blank"
+                  >Not every property is displayed with the command above</a
+                >. Under the hood, for each file,
+                <span class="code">.git/index</span> stores these properties:
+              </p>
+              <ul class="list">
+                <li class="list__item">
+                  <span class="code">mtime</span> - <b>latest update time</b>.
+                  This allows Git to quickly identify which files have changed
+                  since the last time in the working tree without having to
+                  search through everything each time there are changes.
+                </li>
+                <li class="list__item">
+                  <span class="code">fname</span> - <b>filename</b>
+                </li>
+                <li class="list__item">
+                  <span class="code">wdir</span> - file version (SHA-1) in the
+                  working directory
+                </li>
+                <li class="list__item">
+                  <span class="code">stage</span> - file version (SHA-1) in the
+                  staging directory
+                </li>
+                <li class="list__item">
+                  <span class="code">repo</span> - file version (SHA-1) in the
+                  local repository
+                </li>
+              </ul>
+              <p class="text">
+                <span class="code">.git/index</span> is updated when
+                <b>adding</b> or <b>removing</b> files from the staging area and
+                the local repository.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Adding new files to the Index</h2>
+              <p class="text text--label">Take a look at this scenario:</p>
+              <pre><code class="code-block language-plain">$ echo -n "new file 5" > file5.txt
+
+$ ll .git/objects
+
+total 8.0K
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:55 info
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:55 pack
+
+$ git ls-files --stage
+
+100644 4988b5e6c604b490401d0a1be9f6f8025b60781c 0       dir1/file1.txt
+100644 8c7f7ff45b68b6e818f2d4bc3ae6f43332d3ecf7 0       dir2/file2.txt
+100644 b037b2f50c795358d208ffb853999c7d14257773 0       file3.txt
+100644 86825070f391e4be005bc2c73f91057cc7e94b28 0       file4.txt
+
+$ git status
+
+On branch master
+Untracked files:
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+        file5.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+$ git add file5.txt
+
+$ git status
+
+On branch master
+Changes to be committed:
+  (use "git restore --staged &lt;file&gt;..." to unstage)
+        new file:   file5.txt
+
+$ ll .git/objects
+
+total 12K
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:42 14
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:41 info
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:41 pack
+
+$ git ls-files --stage
+
+100644 4988b5e6c604b490401d0a1be9f6f8025b60781c 0       dir1/file1.txt
+100644 8c7f7ff45b68b6e818f2d4bc3ae6f43332d3ecf7 0       dir2/file2.txt
+100644 b037b2f50c795358d208ffb853999c7d14257773 0       file3.txt
+100644 86825070f391e4be005bc2c73f91057cc7e94b28 0       file4.txt
+100644 1463a3913b7f3ed15583d64cf7fb528e1cb39634 0       file5.txt</code></pre>
+              <p class="text text--label">Let's explain what happened:</p>
+              <ul class="list">
+                <li class="list__item">
+                  We added a new file <span class="code">file5.txt</span>.
+                </li>
+                <li class="list__item">
+                  No new objects in <span class="code">.git/objects/</span> were
+                  created at this point.
+                </li>
+                <li class="list__item">
+                  File is not included in the
+                  <span class="code">.git/index</span>.
+                </li>
+                <li class="list__item">
+                  The new file is untracked in
+                  <span class="code">git status</span>.
+                </li>
+                <li class="list__item">
+                  We staged the file using the
+                  <span class="code">git add</span> command.
+                </li>
+                <li class="list__item">
+                  The new file is now staged in the repository.
+                </li>
+                <li class="list__item">
+                  A new object was created in the
+                  <span class="code">.git/objects/</span> directory for
+                  <span class="code">file5.txt</span>. This action was performed
+                  by the <span class="code">.git/index</span>.
+                </li>
+                <li class="list__item">
+                  A new entry was added to the
+                  <span class="code">.git/index</span> for
+                  <span class="code">file5.txt</span>.
+                </li>
+              </ul>
+              <p class="text text--label">
+                Now, lets modify the <span class="code">file5.txt</span> and add
+                it again to the repository:
+              </p>
+              <pre><code class="code-block language-plain">$ echo -n "new file 6" > file5.txt
+
+$ git status
+
+On branch master
+Changes to be committed:
+  (use "git restore --staged &lt;file&gt;..." to unstage)
+        new file:   file5.txt
+
+Changes not staged for commit:
+  (use "git add &lt;file&gt;..." to update what will be committed)
+  (use "git restore &lt;file&gt;..." to discard changes in working directory)
+        modified:   file5.txt
+
+$ ll .git/objects
+
+total 12K
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:42 14
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:41 info
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:41 pack
+
+$ git ls-files --stage
+
+100644 4988b5e6c604b490401d0a1be9f6f8025b60781c 0       dir1/file1.txt
+100644 8c7f7ff45b68b6e818f2d4bc3ae6f43332d3ecf7 0       dir2/file2.txt
+100644 b037b2f50c795358d208ffb853999c7d14257773 0       file3.txt
+100644 86825070f391e4be005bc2c73f91057cc7e94b28 0       file4.txt
+100644 1463a3913b7f3ed15583d64cf7fb528e1cb39634 0       file5.txt
+
+$ git add file5.txt
+
+$ ll .git/objects
+
+total 16K
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:42 14
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:45 d7
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:41 info
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:41 pack
+
+$ git ls-files --stage
+
+100644 4988b5e6c604b490401d0a1be9f6f8025b60781c 0       dir1/file1.txt
+100644 8c7f7ff45b68b6e818f2d4bc3ae6f43332d3ecf7 0       dir2/file2.txt
+100644 b037b2f50c795358d208ffb853999c7d14257773 0       file3.txt
+100644 86825070f391e4be005bc2c73f91057cc7e94b28 0       file4.txt
+100644 d7bd1b39072cb3ddc0e503f51aab7e7e0e39539b 0       file5.txt</code></pre>
+              <p class="text text--label">What happened this time:</p>
+              <ul class="list">
+                <li class="list__item">
+                  We modified the content of the
+                  <span class="code">file5.txt</span>.
+                </li>
+                <li class="list__item">
+                  In the <span class="code">git status</span>, previous version
+                  of the <span class="code">file5.txt</span> is still staged (is
+                  added to the <span class="code">.git/index</span>), new
+                  version appears as modified.
+                </li>
+                <li class="list__item">
+                  The <span class="code">.git/index</span> shows entry with
+                  version of <span class="code">file5.txt</span> before
+                  modification.
+                </li>
+                <li class="list__item">
+                  We stage the file again using the
+                  <span class="code">git add</span> command.
+                </li>
+                <li class="list__item">
+                  The <span class="code">.git/index</span> is updated with the
+                  new version of the <span class="code">file5.txt</span>.
+                </li>
+                <li class="list__item">
+                  In the <span class="code">.git/objects/</span> we can see
+                  previous version of the <span class="code">file5.txt</span>,
+                  which became a <b>dangling object</b> (an object without any
+                  reference in the repository).
+                </li>
+              </ul>
+              <p class="text">
+                In the section above, I mentioned, that every entry in the
+                <span class="code">.git/index</span> has a <b>version</b> of the
+                file expressed using <span class="code">mtime</span>,
+                <span class="code">wdir</span>,
+                <span class="code">staged</span> or
+                <span class="code">repo</span> properties.
+              </p>
+              <p class="text">
+                When the <span class="code">.git/index</span> is modified, these
+                three properties are accordingly updated, and
+                <span class="code">git status</span>
+                <b>output is determined based on the differences</b> (SHA-1) in
+                these properties.
+              </p>
+              <p class="text">
+                To be honest, it's very hard to me to
+                <b>deeply and clearly explain</b>
+                how the
+                <span class="code">.git/index</span> works. It requires
+                <b>practise rather than reading theory</b>. I recommend you to
+                try out different scenarious by yourself if you are interested
+                in it's internals.
+              </p>
+              <p class="text">
+                Explanation from
+                <a href="#staging-area-/-index">this section</a> is enough, if
+                you understand the basic concept of the staging area, which is
+                just a <b>propose of the new commit</b>.
               </p>
             </div>
             <div class="group">
@@ -1142,9 +1460,13 @@ total 8
             <div class="group">
               <h2 class="heading heading--h2">.keep</h2>
               <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
+                Git by default <b>doesn't add empty directories</b> to the
+                repository.
+              </p>
+              <p class="text">
+                A convinient way to add empty directories to the repository is
+                to put an empty file called
+                <span class="code">.keep</span> inside the directory.
               </p>
             </div>
           </main>
