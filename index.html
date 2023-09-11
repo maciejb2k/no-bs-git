@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>No Bullshit Git</title>
+    <title>No Bullsh*t Git</title>
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -60,7 +60,11 @@
           </a>
         </div>
         <div class="header__right">
-          <a href="#" class="github-button">
+          <a
+            href="https://github.com/maciejb2k/no-bs-git"
+            target="_blank"
+            class="github-button"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -1057,7 +1061,6 @@ total 8
                 alt="graphic showing flow between working directory, index and local repository"
                 class="image image--margin"
               />
-
               <p class="text text--label">
                 We will cover each of these stages briefly.
               </p>
@@ -1145,9 +1148,11 @@ total 8
                 <a
                   href="https://github.com/git/git/blob/867b1c1bf68363bcfd17667d6d4b9031fa6a1300/Documentation/technical/index-format.txt#L38"
                   target="_blank"
-                  >Not every property is displayed with the command above</a
+                  >Not every property is displayed with the git ls-files
+                  command</a
                 >. Under the hood, for each file,
-                <span class="code">.git/index</span> stores these properties:
+                <span class="code">.git/index</span> stores following
+                properties:
               </p>
               <ul class="list">
                 <li class="list__item">
@@ -1343,7 +1348,11 @@ $ git ls-files --stage
                   In the <span class="code">.git/objects/</span> we can see
                   previous version of the <span class="code">file5.txt</span>,
                   which became a <b>dangling object</b> (an object without any
-                  reference in the repository).
+                  reference in the repository - garbage collector will remove
+                  this file by default
+                  <a href="https://git-scm.com/docs/git-gc" target="_blank"
+                    >after 90 days</a
+                  >).
                 </li>
               </ul>
               <p class="text">
@@ -1376,6 +1385,15 @@ $ git ls-files --stage
                 you understand the basic concept of the staging area, which is
                 just a <b>propose of the new commit</b>.
               </p>
+              <img src="assets/index-view.png" alt="" class="image" />
+              <div class="image-caption">
+                Source:
+                <a
+                  href="https://github.blog/2021-11-10-make-your-monorepo-feel-small-with-gits-sparse-index/"
+                  target="_blank"
+                  >GitHub Blog</a
+                >
+              </div>
             </div>
             <div class="group">
               <h2 class="heading heading--h2">Local repository</h2>
@@ -1401,17 +1419,197 @@ $ git ls-files --stage
             <div class="group">
               <h2 class="heading heading--h2">Branches</h2>
               <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
+                Branches are used as <b>independent lines of development</b>.
+                But what is branch itself?
+              </p>
+              <p class="text">
+                Branch is a <b>named reference to the commit</b>.
+              </p>
+              <p class="text">
+                That's it. Sounds simple, but confusing at the same time. Let's
+                take a closer look at the branches inside the
+                <span class="code">.git/</span> directory.
+              </p>
+              <p class="text">
+                Branches, or more precisely, <b>references to a commits</b> are
+                stored inside the
+                <span class="code">.git/refs/</span> directory.
+              </p>
+              <pre><code class="code-block">$ ll .git/refs
+
+total 12K
+drwxr-xr-x 3 gigachad gigachad 4.0K Sep  5 16:07 heads
+drwxr-xr-x 3 gigachad gigachad 4.0K Aug 30 09:35 remotes
+drwxr-xr-x 2 gigachad gigachad 4.0K Jul  5 20:57 tags
+
+$ ll .git/refs/heads
+
+total 4.0K
+-rw-r--r-- 1 gigachad gigachad 41 Sep 11 16:50 master</code></pre>
+              <p class="text text--label">
+                Inside the <span class="code">.git/refs</span> directory there
+                are three other directories:
+              </p>
+              <ul class="list">
+                <li class="list__item">
+                  <span class="code">heads</span> - stores local branches.
+                </li>
+                <li class="list__item">
+                  <span class="code">remotes</span> - stores remote branches.
+                </li>
+                <li class="list__item">
+                  <span class="code">tags</span> - stores lightweight tags, we
+                  will talk about them later.
+                </li>
+              </ul>
+              <p class="text text--label">
+                Let's take a closer look at the local branches:
+              </p>
+              <pre><code class="code-block">$ ll .git/refs/heads
+
+total 4.0K
+-rw-r--r-- 1 gigachad gigachad 41 Sep 11 16:50 master
+
+$ cat .git/refs/heads/master
+
+bf44270dcf4abb61d7c5062123bb054a3770f8dd</code></pre>
+              <p class="text">
+                When the repository is initialized, the default branch is
+                created, usually called <b>master</b> or <b>main</b>.
+              </p>
+              <p class="text">
+                A branch is a <b>text file</b>, which name is the
+                <b>name of the branch</b>, and the content is the
+                <b>SHA-1 of the commit, which the branch points to</b>. It's
+                that simple.
+              </p>
+              <p class="text">
+                When a new commit is created, the branch we are currently on is
+                updated with the <b>SHA-1 of the new commit</b>, so the branch
+                moves forward with each new commit.
               </p>
             </div>
             <div class="group">
               <h2 class="heading heading--h2">HEAD</h2>
               <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
+                How do Git know which branch we are currently on? It's stored in
+                the <span class="code">.git/HEAD</span> file.
+              </p>
+              <pre><code class="code-block">$ cat .git/HEAD
+
+ref: refs/heads/master</code></pre>
+              <p class="text">
+                The <span class="code">.git/HEAD</span> is a text file, which
+                stores <b>path to a branch</b> from the
+                <span class="code">.git/refs/heads</span> directory.
+              </p>
+              <p class="text">
+                When we switch branches, the
+                <span class="code">.git/HEAD</span> is updated with the
+                <b>new path</b>
+                to the branch.
+              </p>
+              <p class="text">
+                We can use the <b>currently used branch name</b> with the
+                <span class="code">HEAD</span> interchangeably. It will be
+                resolved to the <b>SHA-1 of the commit</b>, which the branch
+                points to.
+              </p>
+              <pre><code class="code-block language-plain">$ git cat-file -p HEAD
+
+tree ca832d9a2eda0108a3364a250a07a9124ff33fd1
+parent aa656d4a755d144e68571585e33bf9c67a0b247c
+author Maciej Biel &lt;example@email.com&gt; 1694443839 +0200
+committer Maciej Biel &lt;example@email.com&gt; 1694443839 +0200
+
+Third commit
+
+$ git cat-file -p master
+
+tree ca832d9a2eda0108a3364a250a07a9124ff33fd1
+parent aa656d4a755d144e68571585e33bf9c67a0b247c
+author Maciej Biel &lt;example@email.com&gt; 1694443839 +0200
+committer Maciej Biel &lt;example@email.com&gt; 1694443839 +0200
+
+Third commit
+
+$ git cat-file -p bf44270
+
+tree ca832d9a2eda0108a3364a250a07a9124ff33fd1
+parent aa656d4a755d144e68571585e33bf9c67a0b247c
+author Maciej Biel &lt;example@email.com&gt; 1694443839 +0200
+committer Maciej Biel &lt;example@email.com&gt; 1694443839 +0200
+
+Third commit</code></pre>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Reachability of the commits</h2>
+              <p class="text">
+                Commits can be <b>reachable</b> or
+                <b>unreachable / dangling</b>. Take a look at the diagram below:
+              </p>
+              <img
+                src="assets/reachability.jpg"
+                alt="flow showing reachability of the commits"
+                class="image image--margin"
+              />
+              <p class="text">
+                When a branch references a commit, all of its ancestor commits
+                (parent commits) become reachable, starting from the first
+                commits to which the branches
+                <span class="code">master</span> and
+                <span class="code">develop</span> points.
+              </p>
+              <p class="text">
+                All of the grey commits are <b>unreachable</b>, because none of
+                the branches points to them. They will remain in the
+                <span class="code">.git/objects/</span> directory in the
+                repository <b>for the 90 days</b>.
+              </p>
+              <p class="text">
+                If you know the <b>SHA-1</b> of the unreachable commits (for
+                instance from reflog) you can still checkout to them, create a
+                branch on that commit, so they will be <b>reachable again</b>.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Detached HEAD</h2>
+              <p class="text">
+                This is a situation, when the
+                <span class="code">.git/HEAD</span> file points
+                <b>directly to the commit</b>, instead of the branch.
+              </p>
+              <p class="text">
+                The <span class="code">89bv5fa</span> commit in a diagram above
+                is an example of a commit, which was created in the detached
+                HEAD mode. None of the branches points to this commit, so it's a
+                <b>dangling commit</b>.
+              </p>
+              <pre><code class="code-block language-plain">test-repo git:(master) git checkout aa656d4
+
+Note: switching to 'aa656d4'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c &lt;new-branch-name&gt;
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at aa656d4 Second commit
+test-repo git:(aa656d4)</code></pre>
+              <p class="text">
+                Any new commits created in this state <b>will be lost</b> after
+                switching back to a branch, beacuse they won't be referenced by
+                any branch (reachability).
               </p>
             </div>
             <div class="group">
@@ -1471,6 +1669,30 @@ $ git ls-files --stage
               </p>
             </div>
             <div class="group">
+              <h2 class="heading heading--h2">Tags</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Annotated Tags</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Lightweight Tags</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Eveniet, aut iusto doloribus earum obcaecati facere cum
+                perferendis ipsam nobis ipsa.
+              </p>
+            </div>
+            <div class="group">
               <h2 class="heading heading--h2">.keep</h2>
               <p class="text">
                 Git by default <b>doesn't add empty directories</b> to the
@@ -1480,6 +1702,26 @@ $ git ls-files --stage
                 A convinient way to add empty directories to the repository is
                 to put an empty file called
                 <span class="code">.keep</span> inside the directory.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">
+                How does Git commands works under the hood?
+              </h2>
+              <p class="text">
+                That's all about basic Git concepts. I hope you enjoyed it.
+              </p>
+              <p class="text">
+                The continuation of this guide will be about
+                <b>how most of the Git commands works under the hood</b>. I
+                strongly recommend you to read my article about it:
+              </p>
+              <p class="text">
+                <a
+                  href="https://dev-blog.maciejbiel.pl/git-commands-overview/"
+                  target="_blank"
+                  >https://dev-blog.maciejbiel.pl/git-commands-overview/</a
+                >
               </p>
             </div>
           </main>
