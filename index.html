@@ -1378,11 +1378,24 @@ $ git ls-files --stage
               </p>
             </div>
             <div class="group">
-              <h2 class="heading heading--h2">Repository</h2>
+              <h2 class="heading heading--h2">Local repository</h2>
               <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
+                When the files are staged and ready to be saved to the
+                repository, using the
+                <span class="code">git commit</span> command, they are persisted
+                in the local repository.
+              </p>
+              <p class="text">
+                The files in the local repository are
+                <span class="code">commit</span> objects in the
+                <span class="code">.git/objects/</span> directory.
+              </p>
+              <p class="text">
+                The <span class="code">tree</span> in the
+                <span class="code">commit</span> object is created based on the
+                content of the <span class="code">.git/index</span>. After
+                creating the commit, the properties in the
+                <span class="code">.git/index</span> are accordingly updated.
               </p>
             </div>
             <div class="group">
