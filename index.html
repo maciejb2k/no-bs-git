@@ -1907,6 +1907,111 @@ parent 36cfeec234eb0fd27b3e04db9800eb6aac6265d1</code></pre>
               </p>
             </div>
             <div class="group">
+              <h2 class="heading heading--h2">Tags</h2>
+              <p class="text">
+                Tags in Git are used to <b>mark specific points</b> in the
+                commit history of a repository, typically to label important or
+                stable versions, making it easier to reference and navigate to
+                those points.
+              </p>
+              <p class="text text--label">
+                There are two types of tags in the Git:
+              </p>
+              <ul class="list">
+                <li class="list__item">
+                  <b>Lightweight</b> - they are very similar to branches
+                </li>
+                <li class="list__item">
+                  <b>Annotated</b> - they are similar to commits
+                </li>
+              </ul>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Lightweight Tags</h2>
+              <p class="text">
+                Lightweight tag is just a <b>reference to a commit</b>. Almost
+                the same as a branch.
+              </p>
+              <p class="text text--label">
+                Lightweight tags are stored in the
+                <span class="code">.git/refs/tags</span> directory:
+              </p>
+              <pre><code class="code-block language-plain">$ git tag mytag
+
+$ git log --all --decorate --oneline --graph
+
+* 1fd56c1 (HEAD -> experiment, tag: mytag) C4
+* 36cfeec (master) C3
+* 8df361b C1
+* 5b76239 C0
+
+$ ls -al .git/refs/tags
+
+total 12
+drwxr-xr-x 2 gigachad gigachad 4096 Sep 12 10:17 .
+drwxr-xr-x 4 gigachad gigachad 4096 Sep 12 09:16 ..
+-rw-r--r-- 1 gigachad gigachad   41 Sep 12 10:17 mytag
+
+$ cat .git/refs/tags/mytag
+
+1fd56c10458361b4b127f3de256dfc8b216a112e</code></pre>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Annotated Tags</h2>
+              <p class="text">
+                Annotated <span class="code">tag</span> is fourth type of object
+                in the Git. It's a <b>commit-like object</b>, which stores
+                informations, about the tagger, date, message, and the commit it
+                points to.
+              </p>
+              <p class="text">
+                Annotated tags are stored in the
+                <span class="code">.git/objects/</span> directory.
+              </p>
+              <p class="text">
+                To create an annotated tag, use the
+                <span class="code">git tag -a</span> with the
+                <span class="code">-a</span> flag. The command
+                <span class="code">git show-ref --tags</span> displays all the
+                tags (lightweight and annotated) in the repository.
+              </p>
+              <p class="text text--label">Check out the example below:</p>
+              <pre><code class="code-block language-plain">$ git tag -a v1.0 -m "my version 1.0"
+
+$ git log --all --decorate --oneline --graph
+
+* 1fd56c1 (HEAD -> experiment, tag: v1.0, tag: mytag) C4
+* 36cfeec (master) C3
+* 8df361b C1
+* 5b76239 C0
+
+$ git show-ref --tags
+1fd56c10458361b4b127f3de256dfc8b216a112e refs/tags/mytag
+d62676dd152b3e984221500a293cf073bb1a4c9c refs/tags/v1.0
+
+$ git cat-file -t v1.0
+
+tag
+
+$ git cat-file -p v1.0
+
+object 1fd56c10458361b4b127f3de256dfc8b216a112e
+type commit
+tag v1.0
+tagger Maciej Biel &lt;example@email.com&gt; 1694506994 +0200
+
+my version 1.0
+
+$ git cat-file -p d62676dd15
+
+object 1fd56c10458361b4b127f3de256dfc8b216a112e
+type commit
+tag v1.0
+tagger Maciej Biel &lt;example@email.com&gt; 1694506994 +0200
+
+my version 1.0</code></pre>
+            </div>
+            <div class="group">
               <h2 class="heading heading--h2">Configuring Git</h2>
               <p class="text">
                 Lorem ipsum dolor sit amet consectetur, adipisicing elit.
@@ -1916,30 +2021,6 @@ parent 36cfeec234eb0fd27b3e04db9800eb6aac6265d1</code></pre>
             </div>
             <div class="group">
               <h2 class="heading heading--h2">Reflog</h2>
-              <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
-              </p>
-            </div>
-            <div class="group">
-              <h2 class="heading heading--h2">Tags</h2>
-              <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
-              </p>
-            </div>
-            <div class="group">
-              <h2 class="heading heading--h2">Annotated Tags</h2>
-              <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
-              </p>
-            </div>
-            <div class="group">
-              <h2 class="heading heading--h2">Lightweight Tags</h2>
               <p class="text">
                 Lorem ipsum dolor sit amet consectetur, adipisicing elit.
                 Eveniet, aut iusto doloribus earum obcaecati facere cum
