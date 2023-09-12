@@ -1585,7 +1585,7 @@ Third commit</code></pre>
               <p class="text">
                 This is a situation, when the
                 <span class="code">.git/HEAD</span> file points
-                <b>directly to the commit</b>, instead of the branch.
+                <b>directly to the commit</b>, instead to the tip of the branch.
               </p>
               <p class="text">
                 The <span class="code">89bv5fa</span> commit in a diagram above
@@ -1623,41 +1623,287 @@ test-repo git:(89bv5fa)</code></pre>
             <div class="group">
               <h2 class="heading heading--h2">Merging strategies</h2>
               <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
+                Merging in Git is the process of <b>combining changes</b> from
+                one branch into another branch.
               </p>
+              <p class="text text--label">
+                Git offers four different strategies for merging branches:
+              </p>
+              <ul class="list">
+                <li class="list__item">Fast forward</li>
+                <li class="list__item">Three way merge</li>
+                <li class="list__item">Squash</li>
+                <li class="list__item">Rebase</li>
+              </ul>
             </div>
             <div class="group">
               <h2 class="heading heading--h2">Fast forward merge</h2>
               <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
+                This is the simplest type of merge. The only thing that happens
+                is that the <b>branch pointer is moved forward</b>.
               </p>
+              <p class="text">
+                Fast forward is by default performed when executing:
+                <span class="code">git merge</span>.
+              </p>
+              <p class="text text--label">
+                Take a look what's happening under the hood:
+              </p>
+              <pre><code class="code-block language-bash">$ cat .git/refs/heads/master
+3736ef1bf7c3e7f197d597357840f1e0b69689e5
+
+$ cat .git/refs/heads/new_branch
+8b3783ac86019bb0ab0dc5b62c3abdb8c3964485
+
+$ git checkout master
+Switched to branch ‘master’
+
+$ git merge new_branch
+Updating 3736ef1..8b3783a
+Fast-forward
+new_file.txt | 1 +
+1 file changed, 1 insertion(+)
+create mode 100644 new_file.txt
+
+$ cat .git/refs/heads/master
+8b3783ac86019bb0ab0dc5b62c3abdb8c3964485</code></pre>
             </div>
             <div class="group">
               <h2 class="heading heading--h2">Three way merge</h2>
               <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
+                When we do a merge in Git, we take two commits, calculate the
+                difference between them, and create a new <b>merge commit</b>.
               </p>
+              <p class="text">
+                That's what we'd call a two-way merge. However, Git actually
+                does <b>three comparisons, not just two</b>.
+              </p>
+              <p class="text">
+                We call it a <b>three-way merge</b> because Git also considers
+                the common ancestor of those two commits. This helps us
+                understand who made what changes and how to combine them when
+                creating the merge commit.
+              </p>
+              <p class="text">
+                It's like <b>having a reference point</b> to figure out what to
+                include from both sides.
+              </p>
+              <p class="text">
+                When the fast forward can't be performed, Git will fallback to
+                three way merge, but we can explicitly specify to perform this
+                type of merge using
+                <span class="code">git merge --no-ff</span>.
+              </p>
+              <p class="text">
+                To demonstrate, why Git uses the
+                <b>three way merge</b> strategy, rather than the
+                <b>two way merge</b>, let's take a look at the following
+                scenario:
+              </p>
+              <pre><code class="code-block language-plain">Base commit:
+a
+b
+c
+
+Changes introduced by Commiter #1 on branch feature/1:
+a &lt;- [deleted]
+b &lt;- [modified]
+c &lt;- [modified]
+
+Changes introduced by Commiter #2 on branch feature/2:
+a &lt;- [modified]
+b &lt;- [modified]
+c &lt;- [modified]
+d &lt;- [modified]
+
+Two-way merge (merge feature/1 with feature2, without base commit, deletion by Commiter #1 is present again, so this merge doesn't make any sense):
+a
+b
+c
+d
+
+Three way merge (merge feature/1 with feature2, including base commit, deletion by Commiter #1 is no longer present and this makes sense):
+b
+c
+d</code></pre>
             </div>
             <div class="group">
-              <h2 class="heading heading--h2">Rebase</h2>
+              <h2 class="heading heading--h2">Merge commit</h2>
               <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
+                It's a regular commit created during the merge. The only
+                difference, is that it has <b>more than one parent commit</b>.
+              </p>
+              <pre><code class="code-block language-plain">tree [hash of the merged tree]
+parent [hash of the commit from main]
+parent [hash of the commit from develop]
+author [author name and email]
+committer [committer name and email]
+
+Merge branch '[develop]'</code></pre>
+              <p class="text">
+                When performing three way merge, the history of merged branch is
+                <b>visible in the log</b>, because of the
+                <span class="code">parent</span> header, with reference to
+                commits from the merged branch.
               </p>
             </div>
             <div class="group">
               <h2 class="heading heading--h2">Squash merge</h2>
               <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
+                Squash merge <b>combines all commits</b> from the merged branch
+                into a <b>single one</b> and creates a merge commit at the tip
+                of the main branch.
+              </p>
+              <p class="text">
+                The most important thing about the squash merge is that it
+                creates a merge commit, which <b>has only one parent commit</b>.
+              </p>
+              <p class="text">
+                There is <b>no reference</b> to commits from merged branch (only
+                one <span class="code">parent</span> header). It makes
+                <b>history cleaner</b>, but we are losing information about the
+                merged branch.
+              </p>
+              <p class="text">
+                Squash command itself doesn't exist in Git (<span class="code"
+                  >git squash</span
+                >), but it's <b>an option</b> when performing a merge or rebase
+                <span class="code">--squash</span>.
+              </p>
+              <p class="text">
+                To perform a squash merge, we need to execute the command <br />
+                <span class="code">git merge --squash</span>.
+              </p>
+              <pre><code class="code-block language-plain">tree [hash of the merged tree]
+parent [hash of the commit from main]
+author [author name and email]
+committer [committer name and email]
+
+Squashed commit of [hash1, hash2, ..., hashN]</code></pre>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Rebase</h2>
+              <p class="text">
+                In my opinion, rebase is the most confusing merge strategy in
+                Git.
+              </p>
+              <p class="text">
+                Take a look at the example below. We have two branches, which we
+                want to merge.
+              </p>
+              <img src="assets/basic-rebase-1.png" alt="" class="image" />
+              <div class="image-caption">
+                Source:
+                <a
+                  href="https://git-scm.com/book/en/v2/Git-Branching-Rebasing"
+                  target="_blank"
+                  >Git Book</a
+                >
+              </div>
+              <p class="text">
+                We can perform the three way merge, which will create a merge
+                commit. But this approach <b>bloats the Git history</b>. At the
+                diagram below it looks clean, but imagine a huge codebase with
+                hundreds of merge commits.
+              </p>
+              <img src="assets/basic-rebase-2.png" alt="" class="image" />
+              <div class="image-caption">
+                Source:
+                <a
+                  href="https://git-scm.com/book/en/v2/Git-Branching-Rebasing"
+                  target="_blank"
+                  >Git Book</a
+                >
+              </div>
+              <p class="text">
+                Solution for cleaner history is a <b>rebase</b>.
+              </p>
+              <p class="text">
+                Rebasing is the process of moving or combining a sequence of
+                commits to a new base commit.
+              </p>
+              <p class="text">
+                Rebase takes all of the commits from the merged branch and
+                <b>recreates them on top of the main branch</b>.
+              </p>
+              <img src="assets/basic-rebase-3.png" alt="" class="image" />
+              <div class="image-caption">
+                Source:
+                <a
+                  href="https://git-scm.com/book/en/v2/Git-Branching-Rebasing"
+                  target="_blank"
+                  >Git Book</a
+                >
+              </div>
+              <p class="text">
+                <b>Warning:</b> All of the rebased commits will have a
+                <b>new SHA-1</b>.
+              </p>
+              <p class="text text--label">
+                Where does new SHA-1 come from? Take a look at the example
+                below:
+              </p>
+              <pre><code class="code-block language-plain">$ git log --all --decorate --oneline --graph
+
+* 96786c8 (HEAD -> experiment) C4
+| * 36cfeec (master) C3
+|/
+* 8df361b C1
+* 5b76239 C0
+
+$ git cat-file -p experiment
+
+tree b8785d053b387d3875c2a9a7c01f866cd521111f
+parent 8df361b8265c1efcddeed0eb1c4bde371834d539
+author Maciej Biel &lt;example@email.com&gt; 1694503064 +0200
+committer Maciej Biel &lt;example@email.com&gt; 1694503064 +0200
+
+C4
+
+$ git rebase master
+
+First, rewinding head to replay your work on top of it...
+Applying: C4
+
+$ $ git log --all --decorate --oneline --graph
+
+* 1fd56c1 (HEAD -> experiment) C4
+* 36cfeec (master) C3
+* 8df361b C1
+* 5b76239 C0
+
+$ git cat-file -p experiment
+
+tree e2c05f73b8c3e41ada14b2b19d0c2966a1ecfd72
+parent 36cfeec234eb0fd27b3e04db9800eb6aac6265d1
+author Maciej Biel &lt;example@email.com&gt; 1694503064 +0200
+committer Maciej Biel &lt;example@email.com&gt; 1694503262 +0200
+
+C4
+</code></pre>
+              <p class="text">
+                Look at the <span class="code">parent</span> header in the
+                <span class="code">C4</span> commit before and after rebase:
+              </p>
+              <pre><code class="code-block language-plain"># Before rebase it points to C1
+parent 8df361b8265c1efcddeed0eb1c4bde371834d539
+
+# After rebase it points to C3
+parent 36cfeec234eb0fd27b3e04db9800eb6aac6265d1</code></pre>
+              <p class="text">
+                That's why rebase is <b>dangerous</b>. The SHA-1 of the whole
+                commit <b>must be re-calculated</b>, because the parent header
+                changes in every rebased commit.
+              </p>
+              <p class="text">
+                Rebase should be performed when <b>pulling changes</b> to your
+                <b>local branch</b>, or when operating on multiple
+                <b>local branches</b>.
+              </p>
+              <p class="text">
+                Rebasing on a remote branchs, where multiple people are working
+                on, is <b>a really bad idea</b>, and it will cause a lot of
+                trouble.
               </p>
             </div>
             <div class="group">
