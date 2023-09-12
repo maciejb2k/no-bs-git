@@ -198,14 +198,14 @@
               <pre><code class="code-block language-bash">$ cd .git/ && ls -al
 
 total 32K
--rw-r--r-- 1 gigachad gigachad   23 Sep  8 13:19 HEAD
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep  8 13:19 branches
--rw-r--r-- 1 gigachad gigachad   92 Sep  8 13:19 config
--rw-r--r-- 1 gigachad gigachad   73 Sep  8 13:19 description
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep  8 13:19 hooks
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep  8 13:19 info
-drwxr-xr-x 4 gigachad gigachad 4.0K Sep  8 13:19 objects
-drwxr-xr-x 4 gigachad gigachad 4.0K Sep  8 13:19 refs</code></pre>
+-rw-r--r-- 1 maciejb maciejb   23 Sep  8 13:19 HEAD
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep  8 13:19 branches
+-rw-r--r-- 1 maciejb maciejb   92 Sep  8 13:19 config
+-rw-r--r-- 1 maciejb maciejb   73 Sep  8 13:19 description
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep  8 13:19 hooks
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep  8 13:19 info
+drwxr-xr-x 4 maciejb maciejb 4.0K Sep  8 13:19 objects
+drwxr-xr-x 4 maciejb maciejb 4.0K Sep  8 13:19 refs</code></pre>
               <p class="text">
                 Familirize yourself with these files and directories and don't
                 do anything else for now. We will be focusing on the
@@ -463,14 +463,14 @@ $ git hash-object -w file.txt
               <pre><code class="code-block language-bash">$ ls -l .git/objects/
 
 total 12K
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep  9 09:01 4e
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep  8 13:19 info
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep  8 13:19 pack
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep  9 09:01 4e
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep  8 13:19 info
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep  8 13:19 pack
 
 $ ls -l .git/objects/4e
 
 total 4.0K
--r--r--r-- 1 gigachad gigachad 32 Sep  9 09:01 91d48941493c77aa18db2cf7661c1fcb4b6ee8</code></pre>
+-r--r--r-- 1 maciejb maciejb 32 Sep  9 09:01 91d48941493c77aa18db2cf7661c1fcb4b6ee8</code></pre>
               <p class="text text--label">
                 If you try to view the content of the file with the
                 <span class="code">cat</span> command, you will get some random
@@ -929,18 +929,18 @@ $ git cat-file -p 384a95a8d353987
               <pre><code class="code-block language-bash">ls -l .git/objects
 
 total 48
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 10:01 01
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 38
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 49
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 5d
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 10:01 6b
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 10:01 86
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 8c
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 b0
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 cc
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 ef
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 info
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 pack</code></pre>
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 10:01 01
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 38
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 49
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 5d
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 10:01 6b
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 10:01 86
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 8c
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 b0
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 cc
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 ef
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 info
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 pack</code></pre>
               <p class="text">
                 All single files in the first ten directories, except the
                 <span class="code">info</span> and
@@ -997,18 +997,18 @@ drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 pack</code></pre>
               <pre><code class="code-block language-plain">$ ls -l .git/objects
 
 total 48
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 10:01 01
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 38
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 49
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 5d
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 10:01 6b
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 10:01 86
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 8c
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 b0
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 cc
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 ef
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 info
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 09:04 pack
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 10:01 01
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 38
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 49
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 5d
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 10:01 6b
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 10:01 86
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 8c
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 b0
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 cc
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 ef
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 info
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 09:04 pack
 
 $ git gc
 
@@ -1022,14 +1022,14 @@ Total 10 (delta 1), reused 0 (delta 0)
 $ ls -l .git/objects
 
 total 8
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 16:58 info
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 10 16:58 pack
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 16:58 info
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 10 16:58 pack
 
 $ ls -l .git/objects/pack
 
 total 8
--r--r--r-- 1 gigachad gigachad 1352 Sep 10 16:58 pack-8d7a7a9ff4d59f249dd1d0f5963ab59402e0e2ca.idx
--r--r--r-- 1 gigachad gigachad  630 Sep 10 16:58 pack-8d7a7a9ff4d59f249dd1d0f5963ab59402e0e2ca.pack</code></pre>
+-r--r--r-- 1 maciejb maciejb 1352 Sep 10 16:58 pack-8d7a7a9ff4d59f249dd1d0f5963ab59402e0e2ca.idx
+-r--r--r-- 1 maciejb maciejb  630 Sep 10 16:58 pack-8d7a7a9ff4d59f249dd1d0f5963ab59402e0e2ca.pack</code></pre>
               <p class="text">
                 As you can see, Git packed all loose objects into
                 <b>single packfile</b> and <b>packfile index</b>.
@@ -1222,8 +1222,8 @@ total 8
 $ ll .git/objects
 
 total 8.0K
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:55 info
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:55 pack
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep 11 15:55 info
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep 11 15:55 pack
 
 $ git ls-files --stage
 
@@ -1253,9 +1253,9 @@ Changes to be committed:
 $ ll .git/objects
 
 total 12K
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:42 14
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:41 info
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:41 pack
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep 11 15:42 14
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep 11 15:41 info
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep 11 15:41 pack
 
 $ git ls-files --stage
 
@@ -1321,9 +1321,9 @@ Changes not staged for commit:
 $ ll .git/objects
 
 total 12K
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:42 14
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:41 info
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:41 pack
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep 11 15:42 14
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep 11 15:41 info
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep 11 15:41 pack
 
 $ git ls-files --stage
 
@@ -1338,10 +1338,10 @@ $ git add file5.txt
 $ ll .git/objects
 
 total 16K
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:42 14
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:45 d7
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:41 info
-drwxr-xr-x 2 gigachad gigachad 4.0K Sep 11 15:41 pack
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep 11 15:42 14
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep 11 15:45 d7
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep 11 15:41 info
+drwxr-xr-x 2 maciejb maciejb 4.0K Sep 11 15:41 pack
 
 $ git ls-files --stage
 
@@ -1469,14 +1469,14 @@ $ git ls-files --stage
               <pre><code class="code-block">$ ll .git/refs
 
 total 12K
-drwxr-xr-x 3 gigachad gigachad 4.0K Sep  5 16:07 heads
-drwxr-xr-x 3 gigachad gigachad 4.0K Aug 30 09:35 remotes
-drwxr-xr-x 2 gigachad gigachad 4.0K Jul  5 20:57 tags
+drwxr-xr-x 3 maciejb maciejb 4.0K Sep  5 16:07 heads
+drwxr-xr-x 3 maciejb maciejb 4.0K Aug 30 09:35 remotes
+drwxr-xr-x 2 maciejb maciejb 4.0K Jul  5 20:57 tags
 
 $ ll .git/refs/heads
 
 total 4.0K
--rw-r--r-- 1 gigachad gigachad 41 Sep 11 16:50 master</code></pre>
+-rw-r--r-- 1 maciejb maciejb 41 Sep 11 16:50 master</code></pre>
               <p class="text text--label">
                 Inside the <span class="code">.git/refs</span> directory there
                 are three other directories:
@@ -1499,7 +1499,7 @@ total 4.0K
               <pre><code class="code-block">$ ll .git/refs/heads
 
 total 4.0K
--rw-r--r-- 1 gigachad gigachad 41 Sep 11 16:50 master
+-rw-r--r-- 1 maciejb maciejb 41 Sep 11 16:50 master
 
 $ cat .git/refs/heads/master
 
@@ -1979,9 +1979,9 @@ $ git log --all --decorate --oneline --graph
 $ ls -al .git/refs/tags
 
 total 12
-drwxr-xr-x 2 gigachad gigachad 4096 Sep 12 10:17 .
-drwxr-xr-x 4 gigachad gigachad 4096 Sep 12 09:16 ..
--rw-r--r-- 1 gigachad gigachad   41 Sep 12 10:17 mytag
+drwxr-xr-x 2 maciejb maciejb 4096 Sep 12 10:17 .
+drwxr-xr-x 4 maciejb maciejb 4096 Sep 12 09:16 ..
+-rw-r--r-- 1 maciejb maciejb   41 Sep 12 10:17 mytag
 
 $ cat .git/refs/tags/mytag
 
@@ -2144,8 +2144,8 @@ my version 1.0</code></pre>
               <pre><code class="code-block language-plain">$ ll .git/refs/remotes/origin
 
 total 8.0K
-drwxr-xr-x 3 gigachad gigachad 4.0K Aug 30 09:35 dependabot
--rw-r--r-- 1 gigachad gigachad   41 Sep  5 16:07 main</code></pre>
+drwxr-xr-x 3 maciejb maciejb 4.0K Aug 30 09:35 dependabot
+-rw-r--r-- 1 maciejb maciejb   41 Sep  5 16:07 main</code></pre>
               <p class="text">
                 When local branches are connected with the remote ones, they are
                 called <b>tracking / upstream branches</b>.
