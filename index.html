@@ -1555,21 +1555,29 @@ Third commit</code></pre>
               />
               <p class="text">
                 When a branch references a commit, all of its ancestor commits
-                (parent commits) become reachable, starting from the first
-                commits to which the branches
-                <span class="code">master</span> and
-                <span class="code">develop</span> points.
+                (parent commits) <b>become reachable</b>, starting from the
+                first commits to which the branches on the diagram points.
               </p>
               <p class="text">
                 All of the grey commits are <b>unreachable</b>, because none of
-                the branches points to them. They will remain in the
+                the branches points to them.
+              </p>
+              <p class="text">
+                <b>Important note:</b> They unreachable commits remain in the
                 <span class="code">.git/objects/</span> directory in the
                 repository <b>for the 90 days</b>.
               </p>
               <p class="text">
+                Even if you delete the branch and the commits are no longer
+                visible in the
+                <span class="code">git log</span>, they are not deleted and will
+                be kept in the local repository for some time.
+              </p>
+              <p class="text">
                 If you know the <b>SHA-1</b> of the unreachable commits (for
-                instance from reflog) you can still checkout to them, create a
-                branch on that commit, so they will be <b>reachable again</b>.
+                instance from <span class="code">git reflog</span>) you can
+                still checkout to them, create a branch on that commit, and they
+                will become <b>reachable again</b>.
               </p>
             </div>
             <div class="group">
@@ -1585,9 +1593,9 @@ Third commit</code></pre>
                 HEAD mode. None of the branches points to this commit, so it's a
                 <b>dangling commit</b>.
               </p>
-              <pre><code class="code-block language-plain">test-repo git:(master) git checkout aa656d4
+              <pre><code class="code-block language-plain">test-repo git:(master) git checkout 89bv5fa
 
-Note: switching to 'aa656d4'.
+Note: switching to '89bv5fa'.
 
 You are in 'detached HEAD' state. You can look around, make experimental
 changes and commit them, and you can discard any commits you make in this
@@ -1604,8 +1612,8 @@ Or undo this operation with:
 
 Turn off this advice by setting config variable advice.detachedHead to false
 
-HEAD is now at aa656d4 Second commit
-test-repo git:(aa656d4)</code></pre>
+HEAD is now at 89bv5fa Unreachable commit
+test-repo git:(89bv5fa)</code></pre>
               <p class="text">
                 Any new commits created in this state <b>will be lost</b> after
                 switching back to a branch, beacuse they won't be referenced by
