@@ -2070,7 +2070,6 @@ my version 1.0</code></pre>
                 uncommited and untracked files from the working directory.
               </p>
             </div>
-
             <div class="group">
               <h2 class="heading heading--h2">.keep</h2>
               <p class="text">
@@ -2084,11 +2083,260 @@ my version 1.0</code></pre>
               </p>
             </div>
             <div class="group">
+              <h2 class="heading heading--h2">Remote</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Asperiores itaque odit fugit exercitationem adipisci similique,
+                expedita impedit temporibus in officia.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Remote config</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Asperiores itaque odit fugit exercitationem adipisci similique,
+                expedita impedit temporibus in officia.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Remote branches</h2>
+              <p class="text">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Asperiores itaque odit fugit exercitationem adipisci similique,
+                expedita impedit temporibus in officia.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Fetch vs Pull</h2>
+              <p class="text">
+                The <span class="code">git fetch</span> command is very
+                mysterious, but with knowledge from previous sections about the
+                Git objects and merging strategies, it is <b>easy and clear</b>.
+              </p>
+              <p class="text">
+                This command fetches all new objects from the remote repository
+                to the <span class="code">.git/objects/</span> directory. These
+                new objects will show up as a commits and tags in the
+                <span class="code">git log</span> command.
+              </p>
+              <p class="text">
+                At this point, <b>everything is up to you</b>, whether you want
+                to merge your local branch with the remote branch, or rebase
+                your local branch on top of the remote branch.
+              </p>
+              <p class="text">
+                Prerequisite for the
+                <span class="code">git fetch</span> command is ability to merge
+                branches and deal with optional conflicts.
+              </p>
+              <p class="text">
+                The <span class="code">git pull</span> /
+                <span class="code">git pull --rebase</span> commands performs at
+                the same time <span class="code">git fetch</span> and
+                <span class="code">git merge</span> /
+                <span class="code">git rebase</span> commands. It is faster in
+                use, but you have less control over the process.
+              </p>
+            </div>
+            <div class="group">
               <h2 class="heading heading--h2">
-                How does Git commands works under the hood?
+                What is inside .git/ directory?
+              </h2>
+              <p class="text text--label">
+                Below is the list of files and directories with explanations:
+              </p>
+              <ul class="list">
+                <li class="list__item">
+                  <span class="code">.git/refs/</span> - references to commits
+                  and tags.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/refs/heads/</span> - refs to local
+                  branches.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/refs/heads/[brach name]</span> - ref
+                  to latest commit on branch.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/refs/remotes/</span> - refs to remote
+                  branches.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/refs/remotes/[origin name]/</span> -
+                  refs for multiple origins.
+                </li>
+                <li class="list__item">
+                  <span class="code"
+                    >.git/refs/remotes/[origin name]/[branch name]</span
+                  >
+                  - ref to latest commit on remote branch.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/refs/remotes/[origin name]/HEAD</span>
+                  - stores default branch for named remote
+                  <span class="code">git remote set-head [branch]</span>.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/refs/tags/</span> - refs to the
+                  lightweight tags.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/refs/tags/[tag name]</span> - ref to
+                  the tag.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/refs/notes/</span> - stores notes from
+                  the git notes.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/refs/notes/commits</span> - points to
+                  the latest note-commit.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/objects/</span> - all of the git
+                  objects lives here
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/objects/info/</span> - additional
+                  information about the object store is recorded in this
+                  directory.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/objects/info/alternates</span> - paths
+                  to alternate object stores that this object store borrows
+                  objects from, one pathname per line.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/objects/info/packs</span> - list with
+                  names of the packfiles.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/objects/info/commit-graph</span> -
+                  binary file storing the commit graph.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/objects/pack/</span> - contains
+                  packfiles.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/objects/pack/[packfile].pack</span> -
+                  single packfile
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/objects/pack/[packfile].idx</span> -
+                  index for the packfile.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/logs/</span> - contains logs.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/logs/HEAD</span> - changes made to the
+                  current branch.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/logs/refs/</span> - logs about
+                  branches.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/logs/refs/heads/</span> - logs about
+                  local branches.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/logs/refs/heads/[branch name]</span> -
+                  single log file for the local branch.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/logs/refs/remotes/</span> - logs about
+                  the remote branches.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/logs/refs/remotes/[origin name]</span>
+                  - logs about single origin.
+                </li>
+                <li class="list__item">
+                  <span class="code"
+                    >.git/logs/refs/remotes/[origin name]/[branch name]</span
+                  >
+                  - log file for single remote branch.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/branches/</span> - let me know if you
+                  found out, what is this directory used for.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/hooks/</span> - directory with hooks,
+                  populated with templates.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/hooks/[hook name]</span> - single
+                  hook.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/info/</span> - contains additional
+                  info about the repository.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/info/refs</span> - contains list of
+                  all the references in the repository.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/info/exclude</span> - contains
+                  patterns for the files which Git will ignore.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/index</span> - index / staging area.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/HEAD</span> - contains reference to
+                  the current used branch.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/ORIG_HEAD</span> - contains SHA-1 of
+                  the commit that the branch was previously on before moving
+                  HEAD.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/MERGE_HEAD</span> - contains SHA-1 of
+                  the commit that is being merged during the merge.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/CHERRY_PICK_HEAD</span> contains SHA-1
+                  of the commit this is being cherry picked during the
+                  cherry-pick.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/FETCH_HEAD</span> - contains lines
+                  with information about the fetched branches and their updates
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/COMMIT_EDITMSG</span> - this file is
+                  created when Git invokes the editor to write a commit message.
+                  Once closed, Git will use the content of this file as the
+                  commit message.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/description</span> - only used by
+                  GitWeb.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/config</span> - local repository
+                  config.
+                </li>
+                <li class="list__item">
+                  <span class="code">.git/packed-refs</span> - this is a file in
+                  the Git repository, that contains a compact representation of
+                  references, including remote branches.
+                </li>
+              </ul>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">
+                How does the Git commands works under the hood?
               </h2>
               <p class="text">
-                That's all about basic Git concepts. I hope you enjoyed it.
+                That's all about basic Git concepts. I will definitely add more
+                content in the future.
               </p>
               <p class="text">
                 The continuation of this guide will be about

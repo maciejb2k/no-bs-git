@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.querySelectorAll(".heading").forEach((heading) => {
     const section = heading.parentElement;
-    section.id = heading.textContent.toLowerCase().replace(/\s/g, "-");
+    section.id = heading.textContent.trim().toLowerCase().replace(/\s/g, "-");
     const headingText = heading.textContent;
 
     const headingLink = document.createElement("a");
