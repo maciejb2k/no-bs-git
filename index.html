@@ -2022,11 +2022,55 @@ my version 1.0</code></pre>
             <div class="group">
               <h2 class="heading heading--h2">Reflog</h2>
               <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
+                The name <b>reflog</b> is short for <b>reference log</b>.
+              </p>
+              <p class="text">
+                Reference logs is a <b>set of all commits</b>, to which the
+                <span class="code">HEAD</span> was pointing back to the time
+                when the initial commit was created.
+              </p>
+              <p class="text">
+                Reference logs are created when the tips of branches and other
+                references in the repository are updated.
+              </p>
+              <p class="text">
+                Reference logs are stored in the
+                <span class="code">.git/refs/logs/</span>.
+              </p>
+              <p class="text">
+                We can access the reflog by typing
+                <span class="code">git reflog</span>, which executes
+                <span class="code">git reflog show</span>, which is alias to
+                <span class="code"
+                  >git log -g --abbrev-commit --pretty=oneline</span
+                >.
+              </p>
+              <pre><code class="code-block language-plain">1fd56c1 (HEAD -> experiment, tag: v1.0, tag: mytag) HEAD@{0}: rebase finished: returning to refs/heads/experiment
+1fd56c1 (HEAD -> experiment, tag: v1.0, tag: mytag) HEAD@{1}: rebase: C4
+36cfeec (master) HEAD@{2}: rebase: checkout master
+96786c8 HEAD@{3}: commit: C4
+8df361b HEAD@{4}: checkout: moving from 8df361b8265c1efcddeed0eb1c4bde371834d539 to experiment
+8df361b HEAD@{5}: checkout: moving from master to 8df361b
+36cfeec (master) HEAD@{6}: commit: C3
+8df361b HEAD@{7}: commit: C1
+5b76239 HEAD@{8}: commit (initial): C0</code></pre>
+              <p class="text">
+                <span class="code">HEAD@{2}</span> - this notation means, where
+                the <span class="code">HEAD</span> was two reference updates
+                before.
+              </p>
+              <p class="text">
+                <b>Notice</b>: Reflog history is
+                <b>stored only locally!</b> It's not included when pushing to
+                remote.
+              </p>
+              <p class="text">
+                Reflog is extremely useful when we want to <b>undo</b> some of
+                your operations. Remember, that you can't undo deletion of
+                uncommited and untracked files from the working directory.
               </p>
             </div>
+
             <div class="group">
               <h2 class="heading heading--h2">.keep</h2>
               <p class="text">
