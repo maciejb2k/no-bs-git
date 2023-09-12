@@ -57,6 +57,10 @@ textarea { resize: vertical; min-width: 100%; display: block; }
   line-height: 1.9;
 }
 
+.nested-list {
+  padding-left: 30px;
+}
+
 .container {
   max-width: 900px;
   margin: 0 auto;

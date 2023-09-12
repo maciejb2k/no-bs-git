@@ -1574,6 +1574,65 @@ committer Maciej Biel &lt;example@email.com&gt; 1694443839 +0200
 Third commit</code></pre>
             </div>
             <div class="group">
+              <h2 class="heading heading--h2">Relative paths</h2>
+              <p class="text text--label">
+                We can use relative paths to reference commits:
+              </p>
+              <ul class="list">
+                <li class="list__item">
+                  <span class="code">HEAD^[num]</span> - selects
+                  <span class="code">parent</span> header from the commit.
+
+                  <ul class="nested-list">
+                    <li>
+                      <span class="code">HEAD^1</span> will select the first
+                      parent.
+                    </li>
+                    <li>
+                      <span class="code">HEAD^2</span> will select the second
+                      parent.
+                    </li>
+                    <li>
+                      <span class="code">HEAD^^2</span> will select the second
+                      parent from the previous commit.
+                    </li>
+                    <li>
+                      <span class="code">HEAD^2^3</span> will select the second
+                      parent from the commit to which HEAD points, and the
+                      third parent from the second commit.
+                    </li>
+                    <li>
+                      <span class="code">HEAD^^</span> will move back by two
+                      commits.
+                    </li>
+                  </ul>
+                </li>
+                <li class="list__item">
+                  <span class="code">HEAD~[num]</span> - gets back a certain
+                  number of commits, including the the
+                  <span class="code">HEAD</span>.
+                  <ul class="nested-list">
+                    <li>
+                      <span class="code">HEAD~</span> selects previous commit.
+                    </li>
+                    <li>
+                      <span class="code">HEAD~1</span> the same as <span class="code">HEAD~</span>.
+                    </li>
+                    <li>
+                      <span class="code">HEAD~3</span> will select
+                      <span class="code">HEAD - 3</span> commit.
+                    </li>
+                    <li>
+                      <span class="code">HEAD~^2~2</span> selects a commit by
+                      going back two commits from the second parent of the
+                      previous commit.
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+              <p class="text">Instead of <span class="code">HEAD</span>, you can also use the <b>branch name</b> or the <b>commit hash</b>. It will work in the same way.</p>
+            </div>
+            <div class="group">
               <h2 class="heading heading--h2">Reachability of the commits</h2>
               <p class="text">
                 Commits can be <b>reachable</b> or
