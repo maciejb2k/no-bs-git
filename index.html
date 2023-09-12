@@ -2113,27 +2113,61 @@ my version 1.0</code></pre>
               </p>
             </div>
             <div class="group">
-              <h2 class="heading heading--h2">Remote</h2>
-              <p class="text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Asperiores itaque odit fugit exercitationem adipisci similique,
-                expedita impedit temporibus in officia.
-              </p>
-            </div>
-            <div class="group">
               <h2 class="heading heading--h2">Remote config</h2>
               <p class="text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Asperiores itaque odit fugit exercitationem adipisci similique,
-                expedita impedit temporibus in officia.
+                Configuration of the remote repository is stored in the
+                <span class="code">.git/config</span> file. Informations about
+                origins are stored there.
               </p>
+              <p class="text text--label">
+                I will show you an example of the configuration in one of my
+                repositories:
+              </p>
+              <pre><code class="code-block language-plain">$ cat .git/config
+
+[core]
+        repositoryformatversion = 0
+        filemode = true
+        bare = false
+        logallrefupdates = true
+[remote "origin"]
+        url = git@github.com:maciejb2k/chronlife.git
+        fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "main"]
+        remote = origin
+        merge = refs/heads/main</code></pre>
             </div>
             <div class="group">
               <h2 class="heading heading--h2">Remote branches</h2>
               <p class="text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Asperiores itaque odit fugit exercitationem adipisci similique,
-                expedita impedit temporibus in officia.
+                Remote branches are stored in the <br />
+                <span class="code">.git/refs/remotes/[origin name]</span>
+                directory.
+              </p>
+              <p class="text">
+                They behave the same as local branches. They are updated on the
+                <span class="code">git fetch</span> command.
+              </p>
+              <pre><code class="code-block language-plain">$ ll .git/refs/remotes/origin
+
+total 8.0K
+drwxr-xr-x 3 gigachad gigachad 4.0K Aug 30 09:35 dependabot
+-rw-r--r-- 1 gigachad gigachad   41 Sep  5 16:07 main</code></pre>
+              <p class="text">
+                When local branches are connected with the remote ones, they are
+                called <b>tracking / upstream branches</b>.
+              </p>
+              <p class="text">
+                With upstream branches, Git will know where to push and pull
+                changes without explicility specifying the remote and branch
+                name.
+              </p>
+              <pre><code class="code-block language-plain">$ git checkout -b [branch] [remote]/[branch]
+$ git checkout --track origin/serverfix
+$ git checkout serverfix</code></pre>
+              <p class="text text--label">
+                To display all references, local and remote in the repository,
+                use the <span class="code">git ls-remote origin</span> command.
               </p>
             </div>
             <div class="group">
