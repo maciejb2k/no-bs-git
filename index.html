@@ -483,7 +483,8 @@ total 4.0K
               <p class="text">
                 Of course nobody views the blobs in the Git repository like
                 this, I want to demonstrate that the compression works. You can
-                compare the results to the form above.
+                compare the results to the compression bytes from the form
+                above.
               </p>
             </div>
             <div class="group">
@@ -1593,9 +1594,9 @@ Third commit</code></pre>
                 the branches points to them.
               </p>
               <p class="text">
-                <b>Important note:</b> They unreachable commits remain in the
-                <span class="code">.git/objects/</span> directory in the
-                repository <b>for the 90 days</b>.
+                <b>Important note:</b> The unreachable commits will remain in
+                the <span class="code">.git/objects/</span> directory in the
+                repository <b>for the next 90 days</b>.
               </p>
               <p class="text">
                 Even if you delete the branch and the commits are no longer
@@ -2040,14 +2041,6 @@ tag v1.0
 tagger Maciej Biel &lt;example@email.com&gt; 1694506994 +0200
 
 my version 1.0</code></pre>
-            </div>
-            <div class="group">
-              <h2 class="heading heading--h2">Configuring Git</h2>
-              <p class="text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Eveniet, aut iusto doloribus earum obcaecati facere cum
-                perferendis ipsam nobis ipsa.
-              </p>
             </div>
             <div class="group">
               <h2 class="heading heading--h2">Reflog</h2>
