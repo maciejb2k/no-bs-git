@@ -2002,6 +2002,322 @@ parent 36cfeec234eb0fd27b3e04db9800eb6aac6265d1</code></pre>
               </p>
             </div>
             <div class="group">
+              <h2 class="heading heading--h2">Merge conflicts</h2>
+              <p class="text">
+                When the same parts of the same file are changed in two
+                different branches, Git won't be able to
+                <b>merge them automatically</b>, and a
+                <b>merge conflict</b> occurs.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Example of a merge conflict</h2>
+              <p class="text">
+                Let's recreate the situation, when a merge conflict can occur.
+              </p>
+              <p class="text text--label">
+                A one of many real world example, when the merge conflict can
+                occur, is when the codebase has
+                <b>inconsistent files formatting</b> and they don't always end
+                up with <b>the newline</b>:
+              </p>
+              <pre><code class="code-block language-plain">$ git init
+                
+$ echo "file1" > file1.txt
+$ git add file1.txt
+$ git commit -m "Init commit"
+
+$ git checkout -b feature
+$ echo "file2" > file2.txt
+$ git add file2.txt
+$ git commit -m "Add file2 with newline"
+
+$ git checkout master
+$ echo -n "file2" > file2.txt
+$ git add file2.txt
+$ git commit -m "Add file2 without newline"
+
+$ git log --all --graph --decorate --oneline
+
+* 865a847 (HEAD -> master) Add file2 without newline
+| * 72c692b (feature) Add file2 with newline
+|/
+* a2ac6b2 Init commit</code></pre>
+              <p class="text">
+                We created a <span class="code">file2.txt</span> <b>with</b> a
+                newline on a <span class="code">feature</span> branch and a
+                <span class="code">file2.txt</span> <b>without</b> a newline on
+                a <span class="code">master</span> branch.
+              </p>
+              <p class="text text--label">
+                Before merging, let's check the content of the
+                <span class="code">.git/index</span>, you will see later why:
+              </p>
+              <pre><code class="code-block language-plain">$ git ls-files --stage
+
+100644 08219db9b0969fa29cf16fd04df4a63964da0b69 0       file1.txt
+100644 30d67d4672d5c05833b7192cc77a79eaafb5c7ad 0       file2.txt</code></pre>
+              <p class="text text--label">
+                Let's perform a merge of branch
+                <span class="code">feature</span> into
+                <span class="code">master</span>, which will
+                <b>result in a conflict</b>:
+              </p>
+              <pre><code class="code-block language-plain">$ git merge feature
+
+CONFLICT (add/add): Merge conflict in file2.txt
+Auto-merging file2.txt
+Automatic merge failed; fix conflicts and then commit the result.
+
+$ cat file2.txt
+
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+file2
+=======
+file2
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature</code></pre>
+              <p class="text">
+                <span class="code">file2.txt</span> from the feature branch
+                contains on the second line of the file the newline character
+                <span class="code">\n</span> and
+                <span class="code">file2.txt</span> from the master branch
+                doesn't even have a second line.
+              </p>
+              <p class="text">
+                Git doesn't know which version of the file to use, so
+                <b>it leaves the decision to the user</b>.
+              </p>
+              <p class="text">
+                The <span class="code">file2.txt</span> contains the
+                <b>conflict markers</b>
+                <span class="code">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span>,
+                <span class="code">=======</span> and
+                <span class="code">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span> which
+                indicates the conflicting parts of the file, which
+                <b>we need to resolve</b>.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">
+                What happens when the merge conflict occurs
+              </h2>
+              <p class="text">
+                Now we are in the middle of the
+                <b>merge conflict resolution</b>. Most of the beginners at this
+                point wants to quit using Git 😂.
+              </p>
+              <p class="text text--label">
+                When you don't know what to do, type
+                <span class="code">git status</span>. It usually gives you
+                useful hints (just read what it says):
+              </p>
+              <pre><code class="code-block language-plain">$ git status
+
+On branch master
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+  (use "git merge --abort" to abort the merge)
+
+Unmerged paths:
+  (use "git add &lt;file&gt;..." to mark resolution)
+        both added:      file2.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")</code></pre>
+              <p class="text">
+                Good news, we can always without any consequences
+                <b>abort the merge</b> with
+                <span class="code">git merge --abort</span> and start over. But
+                we will try to resolve the conflict.
+              </p>
+              <p class="text">
+                How do Git know that we are in the middle of the merge conflict?
+              </p>
+              <p class="text text--label">
+                Let's take a look, what's happening inside the
+                <span class="code">.git/</span> directory. Some new files
+                appeared:
+              </p>
+              <pre><code class="code-block language-plain">$ ll .git
+
+...
+-rw-r--r--  1 gigachad gigachad   41 Sep 13 19:53 MERGE_HEAD
+-rw-r--r--  1 gigachad gigachad    0 Sep 13 19:53 MERGE_MODE
+-rw-r--r--  1 gigachad gigachad   49 Sep 13 19:53 MERGE_MSG
+...
+
+$ cat .git/MERGE_HEAD
+72c692be819987b796dddaeb19d43ef8b8bde2a6
+
+$ cat .git/MERGE_MSG
+Merge branch 'feature'
+
+# Conflicts:
+#       file2.txt
+
+$ cat .git/MERGE_MODE</code></pre>
+              <p class="text text--label">What are these files?</p>
+              <ul class="list">
+                <li class="list__item">
+                  <span class="code">MERGE_MODE</span> - Signals Git, whether we
+                  want to force the <b>three way merge</b>. When we issue
+                  <span class="code">git merge</span> without
+                  <span class="code">--no-ff</span> parameter, this file is
+                  empty, otherwise it contains the
+                  <span class="code">no-ff</span> string.
+                  <a
+                    href="https://github.com/git/git/blob/d6c51973e4a0e889d1a426da08f52b9203fa1df2/builtin/commit.c#L1783"
+                    target="_blank"
+                    >You can read the source code as a proof.</a
+                  >
+                </li>
+                <li class="list__item">
+                  <span class="code">MERGE_HEAD</span> - contains the
+                  <b>SHA-1 hash</b> of the commit from the tip of the branch,
+                  which we are merging into the current branch (in our case
+                  <span class="code">feature</span> branch).
+                </li>
+                <li class="list__item">
+                  <span class="code">MERGE_MSG</span> - contains the default
+                  <b>commit message</b>, which the <b>merge commit</b> will
+                  have.
+                </li>
+              </ul>
+              <p class="text text--label">
+                I mentioned previously, that the
+                <span class="code">.git/index</span> is used when resolving the
+                merge conflict. Let's check the content of the
+                <span class="code">.git/index</span>:
+              </p>
+              <pre><code class="code-block language-plain">$ git ls-files --stage
+
+100644 08219db9b0969fa29cf16fd04df4a63964da0b69 0       file1.txt
+100644 30d67d4672d5c05833b7192cc77a79eaafb5c7ad 2       file2.txt
+100644 6c493ff740f9380390d5c9ddef4af18697ac9375 3       file2.txt
+
+$ git ls-files --debug
+file1.txt
+  ctime: 1694625281:485207678
+  mtime: 1694625281:485207678
+  dev: 2080     ino: 838905
+  uid: 1000     gid: 1000
+  size: 5       flags: 0
+file2.txt
+  ctime: 0:0
+  mtime: 0:0
+  dev: 0        ino: 0
+  uid: 0        gid: 0
+  size: 0       flags: 2000
+file2.txt
+  ctime: 0:0
+  mtime: 0:0
+  dev: 0        ino: 0
+  uid: 0        gid: 0
+  size: 0       flags: 3000</code></pre>
+              <p class="text">
+                We can notice, that <span class="code">file2.txt</span> is
+                listed twice in the <span class="code">.git/index</span> file.
+                The first entry has the <span class="code">flags</span> set to
+                <span class="code">2</span> and the second entry has the
+                <span class="code">flags</span> set to
+                <span class="code">3</span>.
+              </p>
+              <p class="text text--label">
+                The <span class="code">flags</span> are the
+                <b>version numbers</b> of the files in the
+                <span class="code">.git/index</span>, numbered from
+                <span class="code">0</span> to <span class="code">3</span>:
+              </p>
+              <ul class="list">
+                <li class="list__item">
+                  <span class="code">0</span> - this flag means, that everything
+                  is fine with the file, nothing to worry about.
+                </li>
+                <li class="list__item">
+                  <span class="code">1</span> - also called <b>base</b> - the
+                  common ancestor of the file, the version of the file before
+                  the changes were made.
+                </li>
+                <li class="list__item">
+                  <span class="code">2</span> - also called <b>ours</b> - the
+                  version of the file from the branch we are merging from.
+                </li>
+                <li class="list__item">
+                  <span class="code">3</span> - also called <b>theirs</b> - the
+                  version of the file from the branch we are merging into the
+                  current branch.
+                </li>
+              </ul>
+              <p class="text">
+                Flags <span class="code">2</span> and
+                <span class="code">3</span> signals Git, that you are in the
+                <b>middle of the merge conflict</b>.
+              </p>
+              <p class="text text--label">
+                Now, let's fix the conflict. To do that, delete the conflict
+                markers and leave only the content of the file, which you want
+                to keep. Our file2.txt <b>will look like this</b> (by the way
+                adding newlines is a good practice and it's POSIX compliant):
+              </p>
+              <pre><code class="code-block language-plain">file2
+              </code></pre>
+              <p class="text text--label">
+                To tell the Git, that we resolved the conflict in a file, we
+                need to <b>stage</b> the file with
+                <span class="code">git add</span> command. You have to stage
+                <b>every file</b> with resolved conflict to
+                <b>finish the merge</b>:
+              </p>
+              <pre><code class="code-block language-plain">git add file2.txt</code></pre>
+              <p class="text text--label">
+                Let's run the <span class="code">git status</span> again and
+                read what it says:
+              </p>
+              <pre><code class="code-block language-plain">$ git status
+
+On branch master
+All conflicts fixed but you are still merging.
+  (use "git commit" to conclude merge)
+
+Changes to be committed:
+        modified:   file2.txt</code></pre>
+              <p class="text text--label">
+                Now everything is fine and <b>we can commit</b>, but before
+                commiting, let's check the content of the
+                <span class="code">.git/index</span> again:
+              </p>
+              <pre><code class="code-block language-plain">$ git ls-files --stage
+
+100644 08219db9b0969fa29cf16fd04df4a63964da0b69 0       file1.txt
+100644 94121facf433f4f8f095cd23578d744c38c8e225 0       file2.txt</code></pre>
+              <p class="text text--label">
+                When all of the conflicts are resolved, we can commit the merge
+                and that's it:
+              </p>
+              <pre><code class="code-block language-plain">$ git commit</code></pre>
+              <p class="text">
+                That's how you deal with the merge conflicts.
+                <b>It's not that hard, right?</b>
+              </p>
+              <p class="text text--label">
+                Also, you <b>don't have to manually</b> resolve conflicts using
+                the text editor, but you can do it automatically from the
+                command line:
+              </p>
+              <pre><code class="code-block language-plain"># Grab the version of the file from the branch we are merging from
+
+$ git checkout --ours file2.txt
+
+# Grab the version of the file from the branch we are merging into the current branch
+
+$ git checkout --theirs file2.txt</code></pre>
+              <p class="text">
+                Now you know from the <span class="code">.git/index</span>,
+                where does names of the parameters
+                <span class="code">--ours</span> and
+                <span class="code">--theirs</span> come from.
+              </p>
+            </div>
+            <div class="group">
               <h2 class="heading heading--h2">Tags</h2>
               <p class="text">
                 Tags in Git are used to <b>mark specific points</b> in the
