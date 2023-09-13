@@ -2171,10 +2171,11 @@ $ cat .git/MERGE_MODE</code></pre>
                   >
                 </li>
                 <li class="list__item">
-                  <span class="code">MERGE_HEAD</span> - contains the
-                  <b>SHA-1 hash</b> of the commit from the tip of the branch,
-                  which we are merging into the current branch (in our case
-                  <span class="code">feature</span> branch).
+                  <span class="code">MERGE_HEAD</span> - Existence of this file
+                  indicates, that there is <b>ongoing merge conflict</b>.
+                  Contains the <b>SHA-1 hash</b> of the commit from the tip of
+                  the branch, which we are merging into the current branch (in
+                  our case <span class="code">feature</span> branch).
                 </li>
                 <li class="list__item">
                   <span class="code">MERGE_MSG</span> - contains the default
@@ -2252,11 +2253,14 @@ file2.txt
                 <span class="code">3</span> signals Git, that you are in the
                 <b>middle of the merge conflict</b>.
               </p>
+              <p class="text">
+                Now, let's fix the conflict. To do that,
+                <b>delete the conflict markers</b> and leave only the content of
+                the file, which you <b>want to keep</b>.
+              </p>
               <p class="text text--label">
-                Now, let's fix the conflict. To do that, delete the conflict
-                markers and leave only the content of the file, which you want
-                to keep. Our file2.txt <b>will look like this</b> (by the way
-                adding newlines is a good practice and it's POSIX compliant):
+                Our file2.txt <b>will look like this</b> (by the way adding
+                newlines is a good practice and it's POSIX compliant):
               </p>
               <pre><code class="code-block language-plain">file2
               </code></pre>
@@ -2316,6 +2320,77 @@ $ git checkout --theirs file2.txt</code></pre>
                 <span class="code">--ours</span> and
                 <span class="code">--theirs</span> come from.
               </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Cherry pick</h2>
+              <p class="text">
+                Cherry-picking is a process of applying single commit from
+                <b>one branch to another</b>.
+              </p>
+              <p class="text text--label">
+                To perform cherry-pick, checkout to branch, on which you want to
+                apply particular commit, and <b>pick desired commit</b>:
+              </p>
+              <pre><code class="code-block language-plain">$ git cherry-pick &lt;commit SHA-1&gt;</code></pre>
+              <p class="text">
+                Cherry-picked commit is a <b>new commit</b> applied on top of a
+                <b>current branch</b>. It is a <b>new object</b> in the Git.
+              </p>
+              <pre><code class="code-block language-plain">$ git checkout master
+
+$ git log --all --decorate --oneline --graph
+
+* 865a847 (HEAD -> master) Add file2 without newline
+| * e6d01a1 (mybranch) Add file3
+|/
+| * 72c692b (feature) Add file2 with newline
+|/
+* a2ac6b2 Init commit
+
+$ git cherry-pick mybranch
+
+[master 2915c9f] Add file3
+ Date: Wed Sep 13 22:12:09 2023 +0200
+ 1 file changed, 1 insertion(+)
+ create mode 100644 file3.txt
+
+$ git log --all --decorate --oneline --graph
+
+* 2915c9f (HEAD -> master) Add file3
+* 865a847 Add file2 without newline
+| * e6d01a1 (mybranch) Add file3
+|/
+| * 72c692b (feature) Add file2 with newline
+|/
+* a2ac6b2 Init commit</code></pre>
+              <p class="text">
+                Cherry-picked commit <b>does not have any references</b> to the
+                branch it was picked from. It has a single
+                <span class="code">parent</span> header which points to the
+                previous <span class="code">HEAD</span>.
+              </p>
+              <p class="text">
+                When a merge conflict occurs during cherry-picking, Git performs
+                a
+                <b>three way merge</b>, and the procedure of dealing with the
+                merge conflicts is the same as in the section above.
+              </p>
+              <p class="text text--label">
+                During the <b>merge conflict</b> while cherry-picking, two new
+                files appears inside the
+                <span class="code">.git/</span> directory:
+              </p>
+              <ul class="list">
+                <li class="list__item">
+                  <span class="code">CHERRY_PICK_HEAD</span> - Existence of this
+                  file indicates, that there is <b>ongoing merge conflict</b>.
+                </li>
+                <li class="list__item">
+                  <span class="code">CHERRY_PICK_MSG</span> - contains the
+                  default <b>commit message</b>, which the
+                  <b>merge commit</b> will have.
+                </li>
+              </ul>
             </div>
             <div class="group">
               <h2 class="heading heading--h2">Tags</h2>
