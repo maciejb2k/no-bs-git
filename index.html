@@ -1481,6 +1481,9 @@ $ git ls-files --stage
               </p>
               <ul class="list">
                 <li class="list__item">
+                  state of a repository on a current branch.
+                </li>
+                <li class="list__item">
                   untracked files (not commited previously).
                 </li>
                 <li class="list__item">
@@ -1490,6 +1493,9 @@ $ git ls-files --stage
                 <li class="list__item">
                   differences between <span class="code">.git/index</span> and
                   <span class="code">working directory</span>.
+                </li>
+                <li class="list__item">
+                  state of a merge conflict, if it occurs.
                 </li>
               </ul>
               <p class="text">
@@ -1511,7 +1517,7 @@ $ git ls-files --stage
                 <li class="list__item">
                   <span class="code">untracked</span> - the file is
                   <b>not present</b> in the latest commit (there is no entry for
-                  this file in the <span class="code">.git/index</span>)
+                  this file in the <span class="code">.git/index</span>).
                 </li>
                 <li class="list__item">
                   <span class="code">new file</span> - the file is
