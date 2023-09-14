@@ -1,6 +1,27 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Highlight.js
-  hljs.highlightAll();
+  const currentTheme = localStorage.getItem("theme");
+
+  if (currentTheme == "dark") {
+    document.querySelector(".header__logo").src = "assets/logo_light.png";
+  }
+
+  const btn = document.querySelector(".btn-toggle");
+
+  btn.addEventListener("click", function () {
+    document.body.classList.toggle("dark-theme");
+    document.querySelector(".header__logo").src =
+      document.body.classList.contains("dark-theme")
+        ? "assets/logo_light.png"
+        : "assets/logo_color.png";
+
+    let theme = "light";
+
+    if (document.body.classList.contains("dark-theme")) {
+      theme = "dark";
+    }
+
+    localStorage.setItem("theme", theme);
+  });
 
   // Navigation
   const navs = document.querySelectorAll(".nav-list");

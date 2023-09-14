@@ -5,7 +5,43 @@
 }
 
 body {
+  --bg-color: #ffffff;
+  --title-color: #000000;
+  --text-color: #000000;
+  --text-darker-color: #adbac7;
+  --main-color: #e84e31;
+  --nav-color: #3c3c3c;
+  --border-color: #d9d9d9;
+  --code-bg-color: #eaeaea;
+  --code-text-color: #444444;
+  --hamburger-color: #000000;
+  --form-background: #ffffff;
+  --form-text-color: #000000;
+  --form-disabled-background: #fafafa;
+  --form-disabled-text-color: #6c6c6c;
+}
+
+body.dark-theme {
+  --bg-color: #22272e;
+  --title-color: #d2dae3;
+  --text-color: #adbac7;
+  --text-darker-color: #adbac7;
+  --main-color: #ff7459;
+  --nav-color: #8995a1;
+  --border-color: #374453;
+  --code-bg-color: #2f353d;
+  --code-text-color: #d2dae3;
+  --hamburger-color: #ffffff;
+  --form-background: #2f353d;
+  --form-text-color: #adbac7;
+  --form-disabled-background: #2f353d;
+  --form-disabled-text-color: #85919d;
+}
+
+body {
   font-family: 'Open Sans', sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
 }
 
 img {
@@ -18,7 +54,7 @@ label {
 }
 
 a {
-  color: #e84e31;
+  color: var(--main-color);
 }
 
 textarea { resize: vertical; min-width: 100%; display: block; }
@@ -69,11 +105,13 @@ textarea { resize: vertical; min-width: 100%; display: block; }
 }
 
 .header {
-  padding: 50px 0 50px;
-  border-bottom: 1px solid #d9d9d9;
+  padding: 50px 20px 50px;
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .header__logo {
@@ -87,7 +125,6 @@ textarea { resize: vertical; min-width: 100%; display: block; }
   font-weight: 700;
   font-style: italic;
   text-transform: uppercase;
-  color: #5c5c5c;
 }
 
 .header__right {
@@ -99,6 +136,12 @@ textarea { resize: vertical; min-width: 100%; display: block; }
 @media (max-width: 600px) {
   .header__right {
     gap: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .header__right {
+    gap: 3px;
   }
 }
 
@@ -125,6 +168,22 @@ textarea { resize: vertical; min-width: 100%; display: block; }
   justify-content: center;
   background: 0;
   border: 0;
+  fill: var(--hamburger-color);
+}
+
+.btn-toggle {
+  height: 40px;
+  width: 40px;
+  border: 0;
+  background: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  fill: var(--hamburger-color);
+}
+
+.btn-toggle:hover {
+  cursor: pointer;
 }
 
 @media (min-width: 800px) {
@@ -141,8 +200,8 @@ textarea { resize: vertical; min-width: 100%; display: block; }
   .header {
     top: 0;
     position: sticky;
-    padding: 20px 0;
-    background-color: #fff;
+    padding: 20px;
+    background: var(--bg-color);
     z-index: 1;
   }
 
@@ -166,7 +225,7 @@ textarea { resize: vertical; min-width: 100%; display: block; }
 
 @media (max-width: 400px) {
   .header__logo {
-    max-width: 150px;
+    max-width: 140px;
   }
 }
 
@@ -180,12 +239,13 @@ textarea { resize: vertical; min-width: 100%; display: block; }
 
 .content {
   flex: 1;
+  min-width: 0;
 }
 
 .nav {
   margin-top: 50px;
   position: sticky;
-  border-left: 1px solid #d9d9d9;
+  border-left: 1px solid var(--border-color);
   padding-left: 50px;
   flex-shrink: 0;
   align-self: flex-start;
@@ -224,23 +284,23 @@ textarea { resize: vertical; min-width: 100%; display: block; }
 
 .nav-list::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background-color: #d9d9d9;
+  background-color: var(--border-color);
 }
 
 .nav-link {
   display: block;
   font-size: 14px;
-  color: #3c3c3c;
+  color: var(--nav-color);
   text-decoration: none;
 }
 
 .nav-link:hover, .nav-link:focus {
-  color: #000;
+  color: var(--text-color);
   text-decoration: underline;
 }
 
 .nav-link--active {
-  color: #e84e31;
+  color: var(--main-color);
   text-decoration: underline;
 }
 
@@ -248,8 +308,8 @@ textarea { resize: vertical; min-width: 100%; display: block; }
   position: fixed;
   height: 100vh;
   width: 250px;
-  background: #ffffff;
-  border-left: 1px solid #d9d9d9;
+  background: var(--bg-color);
+  border-left: 1px solid var(--border-color);
   right: 0;
   z-index: 3;
   padding: 30px 0;
@@ -268,16 +328,18 @@ textarea { resize: vertical; min-width: 100%; display: block; }
   align-items: center;
   justify-content: center;
   background: 0;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--border-color);
   margin-left: auto;
   margin-right: 30px;
   border-radius: 3px;
   margin-bottom: 30px;
+  color: var(--hamburger-color);
 }
 
 .mobile-nav__close svg {
   width: 20px;
   height: 20px;
+  fill: var(--hamburger-color);
 }
 
 .mobile-nav__close:hover {
@@ -309,10 +371,11 @@ textarea { resize: vertical; min-width: 100%; display: block; }
   display: flex;
   align-items: center;
   gap: 10px;
+  color: var(--title-color);
 }
 
 .heading__link {
-  color: #e84e31;
+  color: var(--main-color);
 }
 
 .heading--h2 {
@@ -321,7 +384,7 @@ textarea { resize: vertical; min-width: 100%; display: block; }
 
 .group {
   padding: 50px 0;
-  border-bottom: 1px solid #d9d9d9;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .text {
@@ -345,14 +408,15 @@ textarea { resize: vertical; min-width: 100%; display: block; }
 }
 
 .code {
-  background-color: #eaeaea;
+  background: var(--code-bg-color);
+  color: var(--code-text-color);
   padding: 4px 8px;
   border-radius: 3px;
   margin-bottom: 30px;
   font-family: 'Fira Code', monospace;
   font-size: 14px;
   font-weight: 400;
-  color: #000;
+  word-break: break-word;
 }
 
 .form {
@@ -372,11 +436,18 @@ textarea { resize: vertical; min-width: 100%; display: block; }
 
 .form__input {
   padding: 10px;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--border-color);
   border-radius: 3px;
   margin-bottom: 10px;
   font-size: 14px;
   width: 100%;
+  background: var(--form-background);
+  color: var(--form-text-color);
+}
+
+.form__input[disabled] {
+  background: var(--form-disabled-background);
+  color: var(--form-disabled-text-color);
 }
 
 .footer {
@@ -404,7 +475,8 @@ pre:last-child {
   min-width: 100px;
   padding: 20px!important;
   border-radius: 3px;
-  background: #eaeaea;
+  background: var(--code-bg-color);
+  color: var(--code-text-color);
   line-height: 1.7;
 }
 
