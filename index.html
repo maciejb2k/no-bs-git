@@ -1685,6 +1685,39 @@ committer Maciej Biel &lt;example@email.com&gt; 1694443839 +0200
 Third commit</code></pre>
             </div>
             <div class="group">
+              <h2 class="heading heading--h2">Packed Refs</h2>
+              <p class="text">
+                By default, all references are stored inside the
+                <span class="code">.git/refs</span> directory.
+              </p>
+              <p class="text">
+                One day you may notice, that the there <b>aren't any references</b>
+                inside the <span class="code">.git/refs</span>.
+              </p>
+              <p class="text">
+                It's because <b>single references</b> are the same
+                <b>loose objects</b>, like objects <a href="#loose-objects-and-compression">from .git/objects directory</a>, and the
+                same problems applies to them with space and network efficiency.
+              </p>
+              <p class="text">References are packed into a <b>single file</b> called: <span class="code">.git/packed-refs</span>.</p>
+              <p class="text text--label">The process of packing refs <b>happens automatically</b>, but we can do it manually with the <span class="code">git pack-refs</span> command:</p>
+              <pre><code class="code-block language-plain">$ ll .git/refs/heads
+
+total 4.0K
+-rw-r--r-- 1 gigachad gigachad 41 Sep 11 16:50 master
+
+$ git pack-refs --all
+
+$ ll .git/refs/heads
+total 0
+
+$  cat .git/packed-refs
+
+# pack-refs with: peeled fully-peeled sorted
+bf44270dcf4abb61d7c5062123bb054a3770f8dd refs/heads/master</code></pre>
+              <p class="text">Git checks first, whether the branch exists in the <span class="code">.git/refs/</span> directory, then lookups the <span class="code">.git/packed-refs</span> file.</p>
+            </div>
+            <div class="group">
               <h2 class="heading heading--h2">Relative paths</h2>
               <p class="text text--label">
                 We can use relative paths to reference commits:
