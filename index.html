@@ -1840,6 +1840,12 @@ test-repo git:(89bv5fa)</code></pre>
                 <li class="list__item">Squash</li>
                 <li class="list__item">Rebase</li>
               </ul>
+              <p class="text">
+                To find differences and changes between the files, Git uses the
+                <a href="http://www.xmailserver.org/diff2.pdf" target="_blank"
+                  >Myers diff algorithm</a
+                >.
+              </p>
             </div>
             <div class="group">
               <h2 class="heading heading--h2">Fast forward merge</h2>
@@ -2334,7 +2340,7 @@ file2.txt
               </p>
               <p class="text text--label">
                 The <span class="code">flags</span> are the
-                <b>version numbers</b> of the files in the
+                <b>version numbers</b> or <b>stages</b> of the files in the
                 <span class="code">.git/index</span>, numbered from
                 <span class="code">0</span> to <span class="code">3</span>:
               </p>
@@ -2359,8 +2365,11 @@ file2.txt
                 </li>
               </ul>
               <p class="text">
-                Flags <span class="code">2</span> and
-                <span class="code">3</span> signals Git, that you are in the
+                Flag <span class="code">0</span> means the file <b>is clean</b>,
+                and flags <span class="code">1</span>,
+                <span class="code">2</span> and
+                <span class="code">3</span> signals Git, that the
+                <b>file is conflicted</b> and you are in the
                 <b>middle of the merge conflict</b>.
               </p>
               <p class="text">
