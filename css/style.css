@@ -402,7 +402,7 @@ pre:last-child {
   overflow-x: auto;
   max-width: 100%;
   min-width: 100px;
-  padding: 20px;
+  padding: 20px!important;
   border-radius: 3px;
   background: #eaeaea;
   line-height: 1.7;

@@ -344,7 +344,7 @@ $ git hash-object file.txt
 # Example header
 blob 12\0</code></pre>
               <p class="text">
-                The <b>content</b> is our input data (stdin, contents of a file,
+                The <b>content</b> is our input data (stdin, content of a file,
                 etc.), which we want to store in the Git repository.
               </p>
             </div>
@@ -381,7 +381,7 @@ $ git hash-object -w file.txt
               <div class="form">
                 <div class="form__group">
                   <label for="blob-input" class="form__label"
-                    >File contents:</label
+                    >File content:</label
                   >
                   <input
                     class="form__input"
@@ -503,7 +503,7 @@ total 4.0K
               <p class="text text--label">
                 The
                 <span class="code">git cat-file</span> with
-                <span class="code">-p</span> flag prints the contents of the
+                <span class="code">-p</span> flag prints the content of the
                 object, and the <span class="code">-t</span> flag prints the
                 type of the object:
               </p>
@@ -1119,103 +1119,150 @@ total 8
                 save them to the repository.
               </p>
               <p class="text">
-                That's exactly what the <b>staging area</b> (also called
-                <b>index</b>) is for. It's a place between the working directory
-                and the local repository, where you can prepare and review files
-                for the commit. It's your <b>proposed next commit</b>.
+                It's a place between the working directory and the local
+                repository, where you can prepare and review files for the
+                commit. It's your <b>proposed next commit</b>. That's exactly
+                what the <b>staging area</b> (also called <b>index</b>) is for.
               </p>
               <p class="text">
-                The command <span class="code">git add</span> is used to add
-                files to the staging area.
+                The command <span class="code">git add</span> is used to
+                <b>add files</b> to the staging area.
               </p>
               <p class="text">
-                How does <b>the staging area work</b>? Technically speaking,
-                it's not a separate place somewhere in the repository, but it is
-                a <b>binary file</b> called
+                How does <b>the staging area work</b>? It's not a separate place
+                somewhere in the repository, but it is a file called
                 <span class="code">.git/index</span>.
               </p>
             </div>
             <div class="group">
               <h2 class="heading heading--h2">How does the Index works?</h2>
               <p class="text">
-                <span class="code">.git/index</span> is a binary file, which
-                stores sorted paths of files in the repository, their hashes,
-                versions and some other metadata.
+                <span class="code">.git/index</span> is a <b>binary file</b>,
+                which stores entries about files in the repository and their
+                hashes with some metadata.
               </p>
-              <p class="text text--label">
-                We can view only <b>partial content</b> of the
-                <span class="code">.git/index</span> file with the
-                <span class="code">git ls-files --stage</span> command:
-              </p>
-              <pre><code class="code-block language-plain">git ls-files --stage
-
-100644 4988b5e6c604b490401d0a1be9f6f8025b60781c 0       dir1/file1.txt
-100644 8c7f7ff45b68b6e818f2d4bc3ae6f43332d3ecf7 0       dir2/file2.txt
-100644 b037b2f50c795358d208ffb853999c7d14257773 0       file3.txt
-100644 86825070f391e4be005bc2c73f91057cc7e94b28 0       file4.txt</code></pre>
               <p class="text text--label">
                 What does the <span class="code">.git/index</span> do:
               </p>
               <ol class="list">
                 <li class="list__item">
                   It stores the current snapshot of all files
-                  <b>added to the repository or to the index.</b>
+                  <b>added to the repository or to the index</b>, sorted
+                  ascending by the <b>relative path</b> to the root directory of
+                  the project.
                 </li>
                 <li class="list__item">
                   When creating a commit, the
                   <span class="code">tree</span> object, that will be included
-                  in the commit, is created <b>based on the contents</b> of the
+                  in the commit, is created <b>based on the content</b> of the
                   <span class="code">.git/index</span>.
                 </li>
                 <li class="list__item">
                   It allows for <b>quick comparison of changes</b> between the
-                  working directory and what is in the index.
+                  working directory / <span class="code">HEAD</span> and the
+                  content of the index.
                 </li>
                 <li class="list__item">
-                  It stores information <b>about conflicts</b> if they occur.
+                  It stores information <b>about merge conflicts</b>, when they
+                  occur.
                 </li>
               </ol>
+              <p class="text">
+                <span class="code">.git/index</span> is updated when
+                <b>adding</b> or <b>removing</b> files from the staging area and
+                the local repository or when <b>switching</b> between branches.
+              </p>
+              <p class="text text--label">
+                We can view only <b>partial content</b> of the
+                <span class="code">.git/index</span> file with the
+                <span class="code">git ls-files</span> command:
+              </p>
+              <pre><code class="code-block language-plain">$ git ls-files --stage
+
+100644 4988b5e6c604b490401d0a1be9f6f8025b60781c 0       dir1/file1.txt
+100644 8c7f7ff45b68b6e818f2d4bc3ae6f43332d3ecf7 0       dir2/file2.txt
+100644 b037b2f50c795358d208ffb853999c7d14257773 0       file3.txt
+100644 86825070f391e4be005bc2c73f91057cc7e94b28 0       file4.txt
+
+$ git ls-files --debug
+
+dir1/file1.txt
+  ctime: 1694688473:191235061
+  mtime: 1694688473:191235061
+  dev: 2080     ino: 839071
+  uid: 1000     gid: 1000
+  size: 10      flags: 0
+dir2/file2.txt
+  ctime: 1694688473:191235061
+  mtime: 1694688473:191235061
+  dev: 2080     ino: 839072
+  uid: 1000     gid: 1000
+  size: 10      flags: 0
+file3.txt
+  ctime: 1694688473:191235061
+  mtime: 1694688473:191235061
+  dev: 2080     ino: 839073
+  uid: 1000     gid: 1000
+  size: 10      flags: 0
+file4.txt
+  ctime: 1694688473:201235061
+  mtime: 1694688473:201235061
+  dev: 2080     ino: 839090
+  uid: 1000     gid: 1000
+  size: 10      flags: 0</code></pre>
               <p class="text text--label">
                 <a
                   href="https://github.com/git/git/blob/867b1c1bf68363bcfd17667d6d4b9031fa6a1300/Documentation/technical/index-format.txt#L38"
                   target="_blank"
                   >Not every property is displayed with the git ls-files
                   command</a
-                >. Under the hood, for each file,
-                <span class="code">.git/index</span> stores following
-                properties:
+                >. For each file, <span class="code">.git/index</span> stores
+                following properties:
               </p>
               <ul class="list">
                 <li class="list__item">
-                  <span class="code">mtime</span> - <b>latest update time</b>.
-                  This allows Git to quickly identify which files have changed
-                  since the last time in the working tree without having to
-                  search through everything each time there are changes.
+                  <span class="code">ctime</span> -
+                  <span class="code">[seconds]:[nanoseconds]</span> - the last
+                  time when the file's <b>metadata changed</b>.
                 </li>
                 <li class="list__item">
-                  <span class="code">fname</span> - <b>filename</b>
+                  <span class="code">mtime</span> -
+                  <span class="code">[seconds]:[nanoseconds]</span> - the last
+                  time when the file's <b>content changed</b>, ignoring metadata
+                  changes.
                 </li>
                 <li class="list__item">
-                  <span class="code">wdir</span> - file version (SHA-1) in the
-                  working directory
+                  <span class="code">dev</span> - identifies hardware device
+                  where the file is stored on.
                 </li>
                 <li class="list__item">
-                  <span class="code">stage</span> - file version (SHA-1) in the
-                  staging directory
+                  <span class="code">ino</span> - number of the file's assigned
+                  <span class="code">inode</span>.
                 </li>
                 <li class="list__item">
-                  <span class="code">repo</span> - file version (SHA-1) in the
-                  local repository
+                  <span class="code">uid</span>, <span class="code">uid</span> -
+                  user's id and group id.
+                </li>
+                <li class="list__item">
+                  <span class="code">fname</span> - filename with a relative
+                  path.
+                </li>
+                <li class="list__item">
+                  <span class="code">flags</span> - we will talk about it in the
+                  <a
+                    href="https://maciejb2k.github.io/no-bs-git/#what-happens-when-the-merge-conflict-occurs"
+                    >merge conflicts section</a
+                  >.
                 </li>
               </ul>
-              <p class="text">
-                <span class="code">.git/index</span> is updated when
-                <b>adding</b> or <b>removing</b> files from the staging area and
-                the local repository.
-              </p>
             </div>
             <div class="group">
               <h2 class="heading heading--h2">Adding new files to the Index</h2>
+              <p class="text">
+                In this section, <b>you can observe</b>, how does the
+                <span class="code">.git/index</span> works in action, and how
+                it's content change when files are added and commited.
+              </p>
               <p class="text text--label">Take a look at this scenario:</p>
               <pre><code class="code-block language-plain">$ echo -n "new file 5" > file5.txt
 
@@ -1387,28 +1434,25 @@ $ git ls-files --stage
                 </li>
               </ul>
               <p class="text">
-                In the section above, I mentioned, that every entry in the
-                <span class="code">.git/index</span> has a <b>version</b> of the
-                file expressed using <span class="code">mtime</span>,
-                <span class="code">wdir</span>,
-                <span class="code">staged</span> or
-                <span class="code">repo</span> properties.
+                How does Git know <b>what status a particular file has</b> in
+                the working directory and whether it qualifies as "Changes to be
+                committed" or "Changes not staged for commit"? You will find out
+                in the <a href="#git-status">next section</a> about the
+                <span class="code">git status</span> command.
+              </p>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Summary about the index</h2>
+              <p class="text">
+                Take this overview of the
+                <span class="code">.git/index</span> internals with a
+                <b>grain of salt</b>.
               </p>
               <p class="text">
-                When the <span class="code">.git/index</span> is modified, these
-                three properties are accordingly updated, and
-                <span class="code">git status</span>
-                <b>output is determined based on the differences</b> (SHA-1) in
-                these properties.
-              </p>
-              <p class="text">
-                To be honest, it's very hard to me to
-                <b>deeply and clearly explain</b>
-                how the
-                <span class="code">.git/index</span> works. It requires
-                <b>practise rather than reading theory</b>. I recommend you to
-                try out different scenarious by yourself if you are interested
-                in it's internals.
+                Probably you won't use that knowledge in real life, but I
+                recommend you to try out different scenarious
+                <b>by yourself</b> if you are interested in it's underlying
+                mechanics.
               </p>
               <p class="text">
                 Explanation from
@@ -1425,6 +1469,67 @@ $ git ls-files --stage
                   >GitHub Blog</a
                 >
               </div>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Git Status</h2>
+              <p class="text">
+                <span class="code">git status</span> shows
+                <b>what's going on right now</b> in the repository.
+              </p>
+              <p class="text text--label">
+                <span class="code">git status</span> shows:
+              </p>
+              <ul class="list">
+                <li class="list__item">
+                  untracked files (not commited previously).
+                </li>
+                <li class="list__item">
+                  differences between <span class="code">.git/index</span> and
+                  <span class="code">HEAD</span>.
+                </li>
+                <li class="list__item">
+                  differences between <span class="code">.git/index</span> and
+                  <span class="code">working directory</span>.
+                </li>
+              </ul>
+              <p class="text">
+                It's a good practice to often run this command, before
+                performing any <b>state altering operations</b>.
+              </p>
+              <p class="text">
+                <span class="code">git status</span> is
+                <b>closely linked</b> with the
+                <span class="code">.git/index</span> file, it enables
+                <b>identification</b> of the current states of files in the
+                repository.
+              </p>
+              <p class="text text--label">
+                Common states of files in the
+                <span class="code">git status</span>:
+              </p>
+              <ul class="list">
+                <li class="list__item">
+                  <span class="code">untracked</span> - the file is
+                  <b>not present</b> in the latest commit (there is no entry for
+                  this file in the <span class="code">.git/index</span>)
+                </li>
+                <li class="list__item">
+                  <span class="code">new file</span> - the file is
+                  <b>not present</b> in the latest commit, but is
+                  <b>staged / added</b> to the
+                  <span class="code">.git/index</span>.
+                </li>
+                <li class="list__item">
+                  <span class="code">modified</span> - the file
+                  <b>is present</b> in the latest commit, but it's content was
+                  <b>modified</b> in the working directory.
+                </li>
+                <li class="list__item">
+                  <span class="code">deleted</span> - the file
+                  <b>is present</b> in the latest commit, but it is deleted in
+                  the working directory.
+                </li>
+              </ul>
             </div>
             <div class="group">
               <h2 class="heading heading--h2">Local repository</h2>
@@ -1523,8 +1628,8 @@ bf44270dcf4abb61d7c5062123bb054a3770f8dd</code></pre>
             <div class="group">
               <h2 class="heading heading--h2">HEAD</h2>
               <p class="text">
-                How do Git know which branch we are currently on? It's stored in
-                the <span class="code">.git/HEAD</span> file.
+                How do Git know on <b>which branch we are currently on</b>? It's
+                stored in the <span class="code">.git/HEAD</span> file.
               </p>
               <pre><code class="code-block">$ cat .git/HEAD
 
@@ -1585,24 +1690,23 @@ Third commit</code></pre>
 
                   <ul class="nested-list">
                     <li>
-                      <span class="code">HEAD^1</span> will select the first
+                      <span class="code">HEAD^1</span> selects the first parent.
+                    </li>
+                    <li>
+                      <span class="code">HEAD^2</span> selects the second
                       parent.
                     </li>
                     <li>
-                      <span class="code">HEAD^2</span> will select the second
-                      parent.
-                    </li>
-                    <li>
-                      <span class="code">HEAD^^2</span> will select the second
+                      <span class="code">HEAD^^2</span> selects the second
                       parent from the previous commit.
                     </li>
                     <li>
-                      <span class="code">HEAD^2^3</span> will select the second
+                      <span class="code">HEAD^2^3</span> selects the second
                       parent from the commit to which HEAD points, and the third
                       parent from the second commit.
                     </li>
                     <li>
-                      <span class="code">HEAD^^</span> will move back by two
+                      <span class="code">HEAD^^</span> moves back by two
                       commits.
                     </li>
                   </ul>
@@ -1616,11 +1720,11 @@ Third commit</code></pre>
                       <span class="code">HEAD~</span> selects previous commit.
                     </li>
                     <li>
-                      <span class="code">HEAD~1</span> the same as
+                      <span class="code">HEAD~1</span> does the same as
                       <span class="code">HEAD~</span>.
                     </li>
                     <li>
-                      <span class="code">HEAD~3</span> will select
+                      <span class="code">HEAD~3</span> selects
                       <span class="code">HEAD - 3</span> commit.
                     </li>
                     <li>
@@ -2453,6 +2557,13 @@ $ cat .git/refs/tags/mytag
               <p class="text">
                 Annotated tags are stored in the
                 <span class="code">.git/objects/</span> directory.
+              </p>
+              <p class="text">
+                Annotated tag also <b>creates a reference</b> in the
+                <span class="code">.git/refs/tags/</span> directory like a
+                lightweight tags, but the reference points to the new annotated
+                <span class="code">tag</span> object, not to the
+                <span class="code">commit</span>.
               </p>
               <p class="text">
                 To create an annotated tag, use the
