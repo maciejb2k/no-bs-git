@@ -2570,7 +2570,7 @@ $ cat .git/refs/tags/mytag
                 points to.
               </p>
               <p class="text">
-                Annotated tags are stored in the
+                <b>Annotated tags</b> are stored in the
                 <span class="code">.git/objects/</span> directory.
               </p>
               <p class="text">
@@ -2622,6 +2622,150 @@ tag v1.0
 tagger Maciej Biel &lt;example@email.com&gt; 1694506994 +0200
 
 my version 1.0</code></pre>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Stash</h2>
+              <p class="text">
+                Stashing allows you to <b>temporarily save</b> uncommited
+                changes to your working directory, which you can
+                <b>restore later</b>.
+              </p>
+              <p class="text">
+                You can't switch to another branch, when you have
+                <b>uncommited changes</b> (except untracked files). Stash allows
+                you to store this changes for later, so you can switch to
+                another branch with clean tree.
+              </p>
+              <p class="text text--label">
+                Simple example of the
+                <span class="code">git stash</span> command usage:
+              </p>
+              <pre><code class="code-block language-plain">$ git status
+
+On branch master
+Changes not staged for commit:
+  (use "git add &lt;file&gt;..." to update what will be committed)
+  (use "git restore &lt;file&gt;..." to discard changes in working directory)
+        modified:   file3.txt
+
+Untracked files:
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+        file2.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+$ git stash
+
+Saved working directory and index state WIP on master: 886115e Second commit
+
+$ git status
+
+On branch master
+Untracked files:
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+        file2.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+$ git stash pop
+
+On branch master
+Changes not staged for commit:
+  (use "git add &lt;file&gt;..." to update what will be committed)
+  (use "git restore &lt;file&gt;..." to discard changes in working directory)
+        modified:   file3.txt
+
+Untracked files:
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+        file2.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+Dropped refs/stash@{0} (3df8ef0900999f167abdfe6f0332d5d7bf311b43)
+
+$  git stash -u
+
+Saved working directory and index state WIP on master: 886115e Second commit
+
+$  git status
+
+On branch master
+nothing to commit, working tree clean</code></pre>
+              <p class="text text--label">
+                What happened in the example above:
+              </p>
+              <ul class="list">
+                <li class="list__item">
+                  We stashed files from our <b>working directory</b> with the
+                  <span class="code">git stash</span> command.
+                </li>
+                <li class="list__item">
+                  Stash by default saves changes made to
+                  <span class="code">tracked</span> files, and skips
+                  <span class="code">untracked</span>.
+                </li>
+                <li class="list__item">
+                  We restored our working directory with the
+                  <span class="code">git stash pop</span> command.
+                </li>
+                <li class="list__item">
+                  We stashed again the files, but this time
+                  <b>including untracked</b> ones with the
+                  <span class="code">git stash -u</span> command.
+                </li>
+                <li class="list__item">The working tree is now clean.</li>
+              </ul>
+            </div>
+            <div class="group">
+              <h2 class="heading heading--h2">Stash objects and stash stack</h2>
+              <p class="text text--label">
+                Stashes forms in a <b>stack</b> data structure. You can list all
+                stashes with the
+                <span class="code">git stash list</span> command:
+              </p>
+              <pre><code class="code-block language-plain">$ git stash list
+
+stash@{0}: WIP on master: 5a9572e New commit
+stash@{1}: WIP on master: 886115e Second commit</code></pre>
+              <p class="text text--label">
+                What exactly <b>is a stash</b>? A new file appeared in the
+                <span class="code">.git/refs</span> directory. Let's inspect it
+                with a <span class="code">git cat-file</span> command:
+              </p>
+              <pre><code class="code-block language-plain">$ ll .git/refs
+
+total 12K
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep 14 15:09 heads
+-rw-r--r-- 1 gigachad gigachad   41 Sep 14 15:09 stash
+drwxr-xr-x 2 gigachad gigachad 4.0K Sep 14 12:47 tags
+
+$ cat .git/refs/stash
+
+bb3a17acb5e1e7d05af08b6ca90ad5ef6a6fb1e1</code></pre>
+              <p class="text text--label">
+                As you can see, Git created a new reference file called
+                <span class="code">stash</span>, which points to a
+                <b>new commit</b>. So a <b>single stash</b> is just a
+                <b>commit</b>. It's message is the same as in stashes list:
+              </p>
+              <pre><code class="code-block language-plain">$ git cat-file -p bb3a17acb5
+
+tree a383a1592d6370cac33a3f8d0fa9029ca0782b51
+parent 5a9572ed0e16fc3dd0dd8bbf026383a27f05aec7
+parent 2632c30af348deb6814317c1b3fa5aadf914fb2c
+author Maciej Biel &lt;example@email.com,&gt; 1694696951 +0200
+committer Maciej Biel &lt;example@email.com,&gt; 1694696951 +0200
+
+WIP on master: 5a9572e New commit
+
+$ git cat-file -t bb3a17acb5
+
+commit</code></pre>
+              <p class="text">
+                You can <b>apply stash</b> from the list with the
+                <span class="code">git stash pop</span> command, which is
+                combination of <span class="code">git stash apply</span> and
+                <span class="code">git stash drop</span>.
+              </p>
             </div>
             <div class="group">
               <h2 class="heading heading--h2">Reflog</h2>
