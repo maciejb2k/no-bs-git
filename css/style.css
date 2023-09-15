@@ -8,6 +8,7 @@ body {
   --bg-color: #ffffff;
   --title-color: #000000;
   --text-color: #000000;
+  --bold-color: #000000;
   --text-darker-color: #adbac7;
   --main-color: #e84e31;
   --nav-color: #3c3c3c;
@@ -25,6 +26,7 @@ body.dark-theme {
   --bg-color: #22272e;
   --title-color: #d2dae3;
   --text-color: #adbac7;
+  --bold-color: #c5ccd3;
   --text-darker-color: #adbac7;
   --main-color: #ff7459;
   --nav-color: #8995a1;
@@ -405,6 +407,7 @@ textarea { resize: vertical; min-width: 100%; display: block; }
 
 .group b {
   font-weight: 600;
+  color: var(--bold-color);
 }
 
 .code {
